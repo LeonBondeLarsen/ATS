@@ -1,0 +1,7 @@
+#!/bin/bash
+
+source _env
+
+ssh ${_REMOTE_USER}@${_REMOTE_HOST}.local
+
+

@@ -1,0 +1,15 @@
+#i3 workspace 10
+#i3 split h
+#gst-launch-1.0 tcpclientsrc host=pip02.local port=5000  ! gdpdepay !  rtph264depay ! avdec_h264 ! videoconvert ! videoflip method=counterclockwise ! queue2 ! autovideosink sync=false &
+
+#sudo chrt --rr 99 gst-launch-1.0 udpsrc port=5000 caps = 'application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, sprop-parameter-sets=(string)"J2QAKKwrQGQe0A8SJqA\=\,KO4G8sA\=", payload=(int)96, ssrc=(uint)3103297854, timestamp-offset=(uint)4262541972, seqnum-offset=(uint)18760' ! rtph264depay ! avdec_h264 ! videoconvert ! videoflip method=clockwise ! autovideosink sync=true &
+
+#sudo chrt --rr 99
+#gst-launch-1.0 udpsrc port=5002 caps = 'application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, sprop-parameter-sets=(string)"J2QAKKwrQGQe0A8SJqA\=\,KO4G8sA\=", payload=(int)96, ssrc=(uint)1357831342, timestamp-offset=(uint)2749630421, seqnum-offset=(uint)48035' ! rtph264depay ! avdec_h264 ! videoconvert ! videoflip method=rotate-180 ! autovideosink sync=true
+#!/bin/zsh
+
+#gst-launch-1.0 udpsrc port=5002 caps = 'application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, sprop-parameter-sets=(string)"J2QAKKwrQGQe0A8SJqA\=\,KO4G8sA\=", payload=(int)96, ssrc=(uint)1357831342, timestamp-offset=(uint)2749630421, seqnum-offset=(uint)48035' ! rtph264depay ! avdec_h264 ! videoconvert ! videoflip method=rotate-180 ! autovideosink sync=true
+
+gst-launch-1.0 -v udpsrc multicast-group=ff75::1 auto-multicast=true caps = 'application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96' ! rtph264depay ! h264parse ! omxh264dec ! videoconvert ! videoflip method=rotate-180 ! autovideosink sync=true
+
+#gst-launch-1.0 -v udpsrc multicast-group=ff75::1 auto-multicast=true caps = 'application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96' ! rtph264depay ! omxh264dec ! fakesink

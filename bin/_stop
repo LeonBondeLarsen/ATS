@@ -1,0 +1,6 @@
+#!/bin/bash
+
+send_tmux 'C-c'
+
+
+

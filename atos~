@@ -1,0 +1,115 @@
+#!/bin/zsh -x
+#!/usr/bin/env zsh
+# 
+# Script for communicating with the ATOS system
+# Author Leon Bonde Larsen <leon@bondelarsen.dk>
+#
+# To-do:
+# _ATOS_PATH is currently hardcoaded
+#
+
+set -o errexit
+set -o nounset
+
+print_error ()
+{
+	>&2 echo $1
+	exit 0
+}
+
+exit_SIGINT () 
+{
+	print_error 'Exiting due to SIGINT'
+}
+trap exit_SIGINT SIGINT
+
+usage() 
+{
+	print_error "
+	usage: ${0##*/} [OPTIONS] UNIT|ALL [COMMAND] 
+
+	Communicate with the ATOS system (Artificial Tutoring Of Songbirds)
+
+	OPTIONS
+	-d       Dry run. Echoes commands instead of running them.
+
+	COMMANDS
+	ssh      Connect via ssh
+	net      Setup internet gateway
+	start    Start unit
+	stop     Stop unit
+	nop      Do nothing
+	"
+}
+
+# Functions for sending command to remote machine
+send_ssh()
+{
+	ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "$@"
+}
+
+send_tmux() 
+{
+	# ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "tmux send-keys -t startup:0.0 $@"
+	send_ssh "tmux send-keys -t startup:0.0 $@" 
+}
+
+setup_environment()
+{
+	_PATH=${_ATOS_PATH}${1}
+	if [[ -e $_ATOS_PATH${1}/_env ]]; then
+		source ${_ATOS_PATH}${1}/_env 
+	else
+		print_error 'Unit not found'
+	fi
+}
+
+run_command()
+{
+	if [ -e ${_ATOS_PATH}bin/_${_COMMAND} ]; then
+		source ${_ATOS_PATH}bin/_${_COMMAND}
+	else
+		print_error 'Unknown command!'
+		usage
+	fi
+}
+
+# Set defaults
+_DRYRUN=false
+_COMMAND=$2
+# Parse options
+while getopts "d" opt; do
+	case "$opt" in
+		l)  echo 'Dry run mode!';_DRYRUN=true      ;;
+	esac
+done
+shift $(( OPTIND - 1 )); OPTIND=1
+
+# Set environment variables
+_ATOS_PATH='/home/leon/scripts/atos/'
+_UNIT=$1
+
+
+if [ $_UNIT = 'ALL' ]; then
+	#units="$(avahi-browse -lart | avahi-list | cut -d'.' -f1)" 
+	#for unit in $=units; do
+	#	_UNIT=$unit
+	#	setup_environment $_UNIT
+	#	run_command
+	#done
+
+	avahi-browse -lart | avahi-list | cut -d'.' -f1 |
+	while read unit; do
+		_UNIT=$unit
+		setup_environment $_UNIT
+		run_command &
+		echo HAJ
+	done
+
+else
+	setup_environment $_UNIT
+	run_command
+fi
+
+
+

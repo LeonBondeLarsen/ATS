@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source _env
+source _functions
+
+testfunction 'Dette er en test'

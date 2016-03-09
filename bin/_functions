@@ -1,0 +1,7 @@
+
+# Function for sending command to remote machine
+send_command() {
+ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "tmux send-keys -t startup:0.0 $@"
+}
+
+

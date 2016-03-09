@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Transfer latest version of script to execute
+scp ${_ATOS_PATH}${_UNIT}/${_STARTUP_SCRIPT} ${_REMOTE_USER}@${_REMOTE_HOST}.local:${_REMOTE_WORKSPACE} 
+send_tmux "${_REMOTE_WORKSPACE}${_STARTUP_SCRIPT}" 'Enter' &> /dev/null
+
+
+
