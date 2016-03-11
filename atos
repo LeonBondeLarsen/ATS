@@ -1,4 +1,3 @@
-#!/bin/zsh -x
 #!/usr/bin/env zsh
 # 
 # Script for communicating with the ATOS system
@@ -10,6 +9,7 @@
 
 set -o errexit
 set -o nounset
+set -x
 
 print_error ()
 {
@@ -26,7 +26,7 @@ trap exit_SIGINT SIGINT
 usage() 
 {
 	print_error "
-	usage: ${0##*/} [OPTIONS] UNIT|ALL [COMMAND] 
+	usage: ${0##*/} [OPTIONS] unit|all [COMMAND] 
 
 	Communicate with the ATOS system (Artificial Tutoring Of Songbirds)
 
@@ -42,73 +42,96 @@ usage()
 	"
 }
 
-# Functions for sending command to remote machine
 send_ssh()
+# Execute command-line on remote machine via ssh
 {
-	ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "$@"
+	if [ $_DRYRUN = true ]; then
+		echo ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "$@"
+	else 
+		ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "$@"
+	fi
 }
 
-send_tmux() 
+send_tmux()
+# Execute command-line on remote machine in tmux startup-session 
 {
-	# ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "tmux send-keys -t startup:0.0 $@"
 	send_ssh "tmux send-keys -t startup:0.0 $@" 
 }
 
 setup_environment()
+# Set environment variables based on _UNIT variable
 {
-	_PATH=${_ATOS_PATH}${1}
-	if [[ -e $_ATOS_PATH${1}/_env ]]; then
-		source ${_ATOS_PATH}${1}/_env 
+	if [[ -e $_ATOS_PATH${_UNIT}/_env ]]; then
+		source ${_ATOS_PATH}${_UNIT}/_env 
 	else
 		print_error 'Unit not found'
 	fi
 }
 
-run_command()
+execute_command()
+# Execute command script
 {
 	if [ -e ${_ATOS_PATH}bin/_${_COMMAND} ]; then
-		source ${_ATOS_PATH}bin/_${_COMMAND}
+
+		if [ $_DRYRUN = true ]; then
+			echo ${_ATOS_PATH}bin/_${_COMMAND}
+		else
+			source ${_ATOS_PATH}bin/_${_COMMAND}
+		fi
 	else
 		print_error 'Unknown command!'
 		usage
 	fi
 }
 
-# Set defaults
+setup_and_execute()
+# Setup environment and execute command
+{
+
+	case $_COMMAND in
+		'ssh')
+			echo "Running $_COMMAND on $_UNIT..."
+			setup_environment 
+			execute_command
+			;;
+		*)
+			{
+				echo "Running $_COMMAND on $_UNIT..."
+				setup_environment 
+				execute_command
+			} 1> >(logger -s -t atos.$_UNIT) 2>&1
+	esac
+}
+
+# Set default options
 _DRYRUN=false
-_COMMAND=$2
+
 # Parse options
 while getopts "d" opt; do
 	case "$opt" in
-		l)  echo 'Dry run mode!';_DRYRUN=true      ;;
+		d)  echo 'Dry run mode!';_DRYRUN=true      ;;
 	esac
 done
 shift $(( OPTIND - 1 )); OPTIND=1
 
-# Set environment variables
+# Set variables
 _ATOS_PATH='/home/leon/scripts/atos/'
+_COMMAND=$2
 _UNIT=$1
 
-
-if [ $_UNIT = 'ALL' ]; then
-	#units="$(avahi-browse -lart | avahi-list | cut -d'.' -f1)" 
-	#for unit in $=units; do
-	#	_UNIT=$unit
-	#	setup_environment $_UNIT
-	#	run_command
+if [ $_UNIT = 'all' ]; then
+	#avahi-browse -lart | avahi-list | cut -d'.' -f1 |
+	#while read _UNIT; do
+	#	setup_and_execute
 	#done
-
-	avahi-browse -lart | avahi-list | cut -d'.' -f1 |
-	while read unit; do
+	#wait
+	units="$(avahi-browse -lart | avahi-list | cut -d'.' -f1)" 
+	for unit in $=units; do
 		_UNIT=$unit
-		setup_environment $_UNIT
-		run_command &
-		echo HAJ
+		setup_and_execute
 	done
-wait
 else
-	setup_environment $_UNIT
-	run_command
+	setup_and_execute
 fi
 
 

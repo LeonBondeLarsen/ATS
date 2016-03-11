@@ -1,3 +1,4 @@
+#!/bin/zsh
 #!/usr/bin/env zsh
 # 
 # Script for communicating with the ATOS system
@@ -9,7 +10,6 @@
 
 set -o errexit
 set -o nounset
-set -x
 
 print_error ()
 {
@@ -45,11 +45,11 @@ usage()
 send_ssh()
 # Execute command-line on remote machine via ssh
 {
-	if [ $_DRYRUN = true ]; then
-		echo ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "$@"
-	else 
+	#if [ $( $_DRYRUN ) ]; then
+	#	echo ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "$@"
+	#else
 		ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "$@"
-	fi
+	#fi
 }
 
 send_tmux()
@@ -73,11 +73,11 @@ execute_command()
 {
 	if [ -e ${_ATOS_PATH}bin/_${_COMMAND} ]; then
 
-		if [ $_DRYRUN = true ]; then
-			cat ${_ATOS_PATH}bin/_${_COMMAND}
-		else
+	#	if [ $( $_DRYRUN ) ]; then
+	#		cat ${_ATOS_PATH}bin/_${_COMMAND}
+	#	else
 			source ${_ATOS_PATH}bin/_${_COMMAND}
-		fi
+	#	fi
 	else
 		print_error 'Unknown command!'
 		usage
@@ -87,6 +87,8 @@ execute_command()
 setup_and_execute()
 # Setup environment and execute command
 {
+	PATH=${_ATOS_PATH}${_UNIT}
+
 
 	case $_COMMAND in
 		'ssh')
@@ -118,6 +120,7 @@ shift $(( OPTIND - 1 )); OPTIND=1
 _ATOS_PATH='/home/leon/scripts/atos/'
 _COMMAND=$2
 _UNIT=$1
+
 
 if [ $_UNIT = 'all' ]; then
 	#avahi-browse -lart | avahi-list | cut -d'.' -f1 |

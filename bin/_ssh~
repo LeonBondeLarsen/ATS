@@ -1,7 +1,6 @@
 #!/bin/bash
 
-source _env
-
+echo 'path:' $PATH
 ssh ${_REMOTE_USER}@${_REMOTE_HOST}.local
 
 
