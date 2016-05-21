@@ -1,9 +1,0 @@
-Low-cost embedded video conference system
-
-In the globalised world, communication is of utmost importance and over the last few decades the telephone has developed into a backbone of civilisation.
-Communication however can sometimes be difficult over such voice-only systems and therefore modern cellphones, tablets and PC's offer video conferencing. 
-These devices are based on a technology where a small camera next to the screen records the user.
-Products like Scype, Facetime and Hangout uses this approach.
-Even though the technology is widely used, most people agree that the experience is flawed. The primary reason for this is the lack of proper eye contact. 
-In this project a video conferencing system with proper eye-contact is developed based on a teleprompter setup. 
-The project aims at a low cost, open source, embedded solution communicating over the internet.  
