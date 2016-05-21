@@ -98,7 +98,7 @@ setup_and_execute()
 			{
 				setup_environment 
 				execute_script
-			} 1> >(logger -s -t ats.$_UNIT) 2>&1
+			} 1> >(logger -s -t atos.$_UNIT) 2>&1
 	esac
 }
 
@@ -122,7 +122,7 @@ set -o nounset
 trap exit_SIGINT SIGINT
 
 # Set variables
-_ATOS_PATH='/home/leon/scripts/ats/'
+_ATOS_PATH='/home/leon/scripts/atos/'
 _COMMAND=$2
 _UNIT=$1
 
