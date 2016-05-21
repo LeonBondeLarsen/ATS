@@ -1,0 +1,38 @@
+##############################################################
+# Setup for box2output in the AToS project
+# Maintainer Leon Bonde Larsen <leon@bondelarsen.dk> 
+#
+# This guide documents the setup of the output pi 
+# The guide assumes a pi2 running raspbian wheezy
+# Hostname is box2output and internet access has been set up
+#############################################################
+
+# Setup codeless access
+mkdir .ssh
+cd .ssh
+vim authorized_keys
+add public key
+
+# Setup environment
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install zsh i3
+chsh -s /usr/bin/zsh pi
+
+# setup screen
+in /boot/config.txt set:
+	hdmi_force_hotplug=1
+	hdmi_group=2
+	hdmi_mode=87
+	hdmi_cvt 800 480 60 6 0 0 0
+
+# Install gstreamer
+sudo sh -c 'echo deb http://vontaene.de/raspbian-updates/ . main >> /etc/apt/sources.list'
+sudo apt-get install "gstreamer1.0-*"
+
+# Disable screensaver
+in /etc/lightdm/lightdm.conf insert after [SeatDefault]:
+	xserver-command=X -s 0 dpms
+
+
+

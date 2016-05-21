@@ -7,11 +7,19 @@
 # _ATOS_PATH is currently hardcoaded
 #
 
-set -o errexit
-set -o nounset
-set -x
+run_command ()
+# All calls are made through this function in order to allow dryrun
+{
+	if [ $_DRYRUN = true ]; then
+		echo "$*"
+		return 0
+	fi
+
+	eval "$@"
+}
 
 print_error ()
+# Outputs error messages
 {
 	>&2 echo $1
 	exit 0
@@ -21,7 +29,6 @@ exit_SIGINT ()
 {
 	print_error 'Exiting due to SIGINT'
 }
-trap exit_SIGINT SIGINT
 
 usage() 
 {
@@ -32,6 +39,7 @@ usage()
 
 	OPTIONS
 	-d       Dry run. Echoes commands instead of running them.
+	-v       Verbose. Outputs all information.
 
 	COMMANDS
 	ssh      Connect via ssh
@@ -45,11 +53,7 @@ usage()
 send_ssh()
 # Execute command-line on remote machine via ssh
 {
-	if [ $_DRYRUN = true ]; then
-		echo ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "$@"
-	else 
-		ssh -t -t ${_REMOTE_USER}@${_REMOTE_HOST}.local "$@"
-	fi
+	run_command ssh -t -t ${_REMOTE_USER}@${_REMOTE_IP}%eth0 "$@"
 }
 
 send_tmux()
@@ -68,16 +72,11 @@ setup_environment()
 	fi
 }
 
-execute_command()
+execute_script()
 # Execute command script
 {
 	if [ -e ${_ATOS_PATH}bin/_${_COMMAND} ]; then
-
-		if [ $_DRYRUN = true ]; then
-			cat ${_ATOS_PATH}bin/_${_COMMAND}
-		else
-			source ${_ATOS_PATH}bin/_${_COMMAND}
-		fi
+		source ${_ATOS_PATH}bin/_${_COMMAND}
 	else
 		print_error 'Unknown command!'
 		usage
@@ -88,17 +87,16 @@ setup_and_execute()
 # Setup environment and execute command
 {
 
+	echo "Running $_COMMAND on $_UNIT..."
 	case $_COMMAND in
 		'ssh')
-			echo "Running $_COMMAND on $_UNIT..."
 			setup_environment 
-			execute_command
+			execute_script
 			;;
 		*)
 			{
-				echo "Running $_COMMAND on $_UNIT..."
 				setup_environment 
-				execute_command
+				execute_script
 			} 1> >(logger -s -t atos.$_UNIT) 2>&1
 	esac
 }
@@ -107,12 +105,20 @@ setup_and_execute()
 _DRYRUN=false
 
 # Parse options
-while getopts "d" opt; do
+while getopts "dv" opt; do
 	case "$opt" in
 		d)  echo 'Dry run mode!';_DRYRUN=true      ;;
+		v) set -x ;;
 	esac
 done
 shift $(( OPTIND - 1 )); OPTIND=1
+
+# Set script options
+set -o errexit
+set -o nounset
+
+# Signal trapping
+trap exit_SIGINT SIGINT
 
 # Set variables
 _ATOS_PATH='/home/leon/scripts/atos/'
@@ -120,16 +126,9 @@ _COMMAND=$2
 _UNIT=$1
 
 if [ $_UNIT = 'all' ]; then
-	#avahi-browse -lart | avahi-list | cut -d'.' -f1 |
-	#while read _UNIT; do
-	#	setup_and_execute
-	#done
-	#wait
-	units="$(avahi-browse -lart | avahi-list | cut -d'.' -f1)" 
-	for unit in $=units; do
-		_UNIT=$unit
+	for _UNIT in $(avahi-browse -lart | avahi-list | cut -d'.' -f1); do 
 		setup_and_execute
-	done
+        done	       
 else
 	setup_and_execute
 fi

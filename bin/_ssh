@@ -1,5 +1,4 @@
 #!/bin/bash
 
-ssh ${_REMOTE_USER}@${_REMOTE_HOST}.local
-
+run_command ssh ${_REMOTE_USER}@${_REMOTE_IP}%eth0
 

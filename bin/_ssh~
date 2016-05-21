@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo 'path:' $PATH
-ssh ${_REMOTE_USER}@${_REMOTE_HOST}.local
-
+_REMOTE_IP=$(avahi-resolve-host-name -6 ${_REMOTE_HOST}.local | cut -f2)
+#run_command ssh ${_REMOTE_USER}@${_REMOTE_HOST}.local
+run_command ssh ${_REMOTE_USER}@${_REMOTE_IP}%eth0
 
