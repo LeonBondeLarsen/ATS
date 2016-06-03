@@ -1,0 +1,10 @@
+#!/bin/bash
+
+_GROUP_IP='ff05::3'
+#_GROUP_IP='224.0.0.100'
+
+#gst-launch-1.0 -e -v audiotestsrc ! udpsink host=$_GROUP_IP auto-multicast=true
+gst-launch-1.0 -e -v audiotestsrc ! audioconvert ! rtpL16pay ! udpsink host=$_GROUP_IP auto-multicast=true
+#gst-launch-1.0 -e -v audiotestsrc ! audioconvert ! rtpL16pay ! udpsink host=$_GROUP_IP auto-multicast=true
+
+#gst-launch-1.0 -e -v audiotestsrc ! audioconvert ! vorbisenc name=enc quality=1.0 ! rtpvorbisenc ! udpsink host=$_GROUP_IP auto-multicast=tru
