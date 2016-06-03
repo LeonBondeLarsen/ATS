@@ -1,4 +1,0 @@
-_REMOTE_USER='pi'
-_REMOTE_HOST='box2output'
-_REMOTE_WORKSPACE='/home/pi/'
-_STARTUP_SCRIPT='_show'

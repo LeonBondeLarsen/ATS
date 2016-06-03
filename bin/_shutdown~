@@ -1,9 +1,0 @@
-#!/bin/bash
-
-source _env
-source _functions
-
-send_command 'C-c'
-
-
-

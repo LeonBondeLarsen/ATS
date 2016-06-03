@@ -1,7 +1,0 @@
-#!/bin/bash
-
-_GROUP_IP='ff05::3'
-
-sudo ./array-tools-1.0/adc/grab | gst-launch-1.0 -e -v fdsrc ! audioconvert ! rtpL16pay ! udpsink host=$_GROUP_IP auto-multicast=true
-
-#sudo ./array-tools-1.0/adc/grab | gst-launch-1.0 -e -v fdsrc ! audioconvert ! vorbisenc name=enc quality=1.0 ! rtpvorbisenc ! udpsink host=$_GROUP_IP auto-multicast=true
