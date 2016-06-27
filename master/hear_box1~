@@ -1,0 +1,12 @@
+#!/bin/zsh
+_GROUP_IP1='ff05::3'
+_GROUP_IP2='ff05::4'
+
+#MULTICAST_IP_ADDR=224.1.1.1
+#AUDIO_UDP_PORT=3000
+#
+#gst-launch-0.10 udpsrc multicast-group=$MULTICAST_IP_ADDR auto-multicast=true port=$AUDIO_UDP_PORT caps="application/x-rtp, media=(string)audio, clock-rate=(int)8000, encoding-name=(string)PCMU, payload=(int)0, ssrc=(guint)1350777638, clock-base=(guint)2942119800, seqnum-base=(guint)47141" ! rtppcmudepay ! mulawdec ! pulsesink
+
+#gst-launch-1.0 -v -m  udpsrc multicast-group='ff05::3' multicast-iface='eth0' auto-multicast=true ! 'audio/x-raw, format=S16LE, layout=interleaved, rate=44100, channels=1'! audioconvert ! audioresample ! autoaudiosink
+#
+gst-launch-1.0 -v -m udpsrc multicast-group=$_GROUP_IP1 multicast-iface='eth0' auto-multicast=true caps = 'application/x-rtp, media=audio, clock-rate=44100, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=44100, channels=1, layout=interleaved' ! rtpL16depay ! audioconvert ! audioresample ! autoaudiosink

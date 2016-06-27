@@ -21,8 +21,8 @@ _BUFFER=524288
 
 # One channel
 sudo ./array-tools-1.0/adc/grab -f 2500000 -B $_BUFFER -vv | \
- 	sox -c8 -r312500 -t s16 - -c 1 -r 44100 -t s16  - |  \
- 	gst-launch-1.0 -e -m -v fdsrc ! "audio/x-raw, format=S16BE,rate=44100, clock-rate=44100, channels=1, layout=interleaved" ! audioconvert ! rtpL16pay ! udpsink host='ff05::3' auto-multicast=true
+ 	sox -c8 -r312500 -t s16 - -c 2 -r 88200 -t s16  - |  \
+ 	gst-launch-1.0 -e -m -v fdsrc ! "audio/x-raw, format=S16BE,rate=44100, clock-rate=44100, channels=2, layout=interleaved" ! audioconvert ! rtpL16pay ! udpsink host='ff05::3' auto-multicast=true
  
 
 
