@@ -127,7 +127,7 @@ _COMMAND=$2
 _UNIT=$1
 
 if [ $_UNIT = 'all' ]; then
-	for _UNIT in $(avahi-browse -lart | ${0%/*}/avahi-list | cut -d'.' -f1); do 
+	for _UNIT in $(avahi-browse -lart | avahi-list | cut -d'.' -f1); do 
 		setup_and_execute
         done	       
 else
