@@ -68,36 +68,33 @@ setup_environment()
 	if [[ -e $_ATOS_PATH${_UNIT}/_env ]]; then
 		source ${_ATOS_PATH}${_UNIT}/_env
 		_REMOTE_IP=$(avahi-resolve-host-name -6 ${_REMOTE_HOST}.local | cut -f2)
+
+		if [ -e ${_ATOS_PATH}bin/_${_COMMAND} ]; then
+
+			echo "Running $_COMMAND on $_UNIT..."
+			source ${_ATOS_PATH}bin/_${_COMMAND}
+		else
+			print_error 'Unknown command!'
+			usage
+		fi
 	else
-		print_error 'Unit not found'
+		print skipping unknown unit: $_UNIT
+		#print_error 'Unit not found'
 	fi
 }
 
-execute_script()
-# Execute command script
-{
-	if [ -e ${_ATOS_PATH}bin/_${_COMMAND} ]; then
-		source ${_ATOS_PATH}bin/_${_COMMAND}
-	else
-		print_error 'Unknown command!'
-		usage
-	fi
-}
 
 setup_and_execute()
 # Setup environment and execute command
 {
 
-	echo "Running $_COMMAND on $_UNIT..."
 	case $_COMMAND in
 		'ssh')
 			setup_environment 
-			execute_script
 			;;
 		*)
 			{
 				setup_environment 
-				execute_script
 			} 1> >(logger -s -t ats.$_UNIT) 2>&1
 	esac
 }
@@ -122,12 +119,13 @@ set -o nounset
 trap exit_SIGINT SIGINT
 
 # Set variables
-_ATOS_PATH='/home/leon/scripts/ats/'
+_ATOS_PATH=${0%/*}/
+print $_ATOS_PATH
 _COMMAND=$2
 _UNIT=$1
 
 if [ $_UNIT = 'all' ]; then
-	for _UNIT in $(avahi-browse -lart | ${0%/*}/avahi-list | cut -d'.' -f1); do 
+	for _UNIT in $(avahi-browse -lart | $_ATOS_PATH/bin/avahi-list | cut -d'.' -f1); do 
 		setup_and_execute
         done	       
 else
