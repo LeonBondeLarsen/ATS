@@ -1,0 +1,6 @@
+#!/usr/bin/awk -f
+
+BEGIN { FS="[][ ]+";ORS="\n" }
+
+/hostname/ { if(!host_seen[$4]++) { if(!first[0]) { print $4 }}}
+

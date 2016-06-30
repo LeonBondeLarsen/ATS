@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Set up device
 sudo modprobe gpio-pca953x
 sleep 1
 sudo echo pca9534 0x27 | sudo tee /sys/bus/i2c/devices/i2c-1/new_device
@@ -8,44 +9,33 @@ sudo /home/pi/array-tools-1.0/command/array-cmd -H localhost -p 4000 &
 sleep 1
 echo gain 1 0x00 on | nc -4u -w1 localhost 4000
 sleep 1
+
+# Play beep
 #gst-launch-1.0 -v -m audiotestsrc ! audioresample ! audioconvert ! rtpL16pay ! udpsink host='ff05::3' auto-multicast=true
+
 _SR=44100
 _BUFFER=524288
-#524288
-#1048576
 #sudo ./array-tools-1.0/adc/grab -f 2500000 -B $_BUFFER -vv | \
 #	sox -c8 -r312500 -t s16 - -c 2 -r $_SR -t s16  - |  \
 #	gst-launch-1.0 -e -m -v fdsrc ! "audio/x-raw, format=S16BE,rate=$_SR, clock-rate=44100, channels=2, layout=interleaved" ! audioconvert ! deinterleave name=d \
 #       d.src_0 ! rtpL16pay ! udpsink host='ff05::3' auto-multicast=true \
 #       d.src_1 ! rtpL16pay ! udpsink host='ff05::4' auto-multicast=true
 
-# One channel
-sudo ./array-tools-1.0/adc/grab -f 2500000 -B $_BUFFER -vv | \
- 	sox -c8 -r312500 -t s16 - -c 1 -r 44100 -t s16  - |  \
- 	gst-launch-1.0 -e -m -v fdsrc ! "audio/x-raw, format=S16BE,rate=44100, clock-rate=44100, channels=1, layout=interleaved" ! audioconvert ! rtpL16pay ! udpsink host='ff05::3' auto-multicast=true
+## One channel
+#sudo ./array-tools-1.0/adc/grab -f 2500000 -B $_BUFFER -vv | \
+# 	sox -c8 -r312500 -t s16 - -c 1 -r 44100 -t s16  - |  \
+# 	stdbuf -i0 -o0 gst-launch-1.0 -e -m -v fdsrc ! "audio/x-raw, format=S16BE,rate=44100, clock-rate=44100, channels=1, layout=interleaved" ! audioconvert ! rtpL16pay ! udpsink host='ff05::3' auto-multicast=true
  
+# Two channels
+sudo ./array-tools-1.0/adc/grab -f 2500000 -B $_BUFFER -vv | \
+ 	sox -c8 -r312500 -t s16 - -c 2 -r 44100 -t s16  - |  \
+ 	stdbuf -i0 -o0 gst-launch-1.0 -e fdsrc ! "audio/x-raw, format=S16BE,rate=44100, clock-rate=44100, channels=2, layout=interleaved" ! deinterleave name=d \
+        d.src_0 ! queue ! audioconvert ! rtpL16pay ! udpsink host='ff05::3' auto-multicast=true \
+        d.src_1 ! queue ! audioconvert ! rtpL16pay ! udpsink host='ff05::4' auto-multicast=true
 
 
-#!/bin/bash
-
-#sudo modprobe gpio-pca953x
-#sudo echo pca9534 0x27 | sudo tee /sys/bus/i2c/devices/i2c-1/new_device
-#sudo /home/pi/array-tools-1.0/command/array-cmd -H localhost -p 4000 &
-#echo gain 1 0x30 on | nc -4u -w1 localhost 4000
-
-#gst-launch-1.0 -v -m audiotestsrc ! audioconvert ! udpsink host='ff05::3' auto-multicast=true
-#
-#_GROUP_IP='ff05::3'
-#_SR=44100
-#
-#sudo ./array-tools-1.0/adc/grab -f 2500000 -vv | \
-#	        sox -c8 -r312500 -t s16 - -c 2 -r $_SR -t s16  - |  \
-#		        gst-launch-1.0 -e -v fdsrc ! "audio/x-raw, format=S16BE,rate=$_SR, clock-rate=44100, channels=2, layout=interleaved" ! deinterleave name=d \
-#			        d.src_0 ! audioconvert ! rtpL16pay ! udpsink host='ff05::3' auto-multicast=true \
-#				        d.src_1 ! audioconvert ! rtpL16pay ! udpsink host='ff05::4' auto-multicast=true \
-#
-					#sudo ./array-tools-1.0/adc/grab | gst-launch-1.0 -e -v fdsrc ! audioconvert ! rtpL16pay ! udpsink host=$_GROUP_IP auto-multicast=true
-
+# Vorbis test (not working)
+#sudo ./array-tools-1.0/adc/grab | gst-launch-1.0 -e -v fdsrc ! audioconvert ! rtpL16pay ! udpsink host=$_GROUP_IP auto-multicast=true
 #sudo ./array-tools-1.0/adc/grab | gst-launch-1.0 -e -v fdsrc ! audioconvert ! vorbisenc name=enc quality=1.0 ! rtpvorbisenc ! udpsink host=$_GROUP_IP auto-multicast=true
 
 	#
