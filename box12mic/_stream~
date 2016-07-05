@@ -1,8 +1,16 @@
 #!/bin/bash
 
 # Set up device
+sudo modprobe gpio-pca953x
+sleep 1
+sudo echo pca9534 0x27 | sudo tee /sys/bus/i2c/devices/i2c-1/new_device
+sleep 1
+sudo /home/pi/array-tools-1.0/command/array-cmd -H localhost -p 4000 &
+sleep 1
 echo gain 1 0x00 on | nc -4u -w1 localhost 4000
 echo gain 2 0x00 on | nc -4u -w1 localhost 4000
+
+sleep 1
 
 # Play beep
 #gst-launch-1.0 -v -m audiotestsrc ! audioresample ! audioconvert ! rtpL16pay ! udpsink host='ff05::3' auto-multicast=true

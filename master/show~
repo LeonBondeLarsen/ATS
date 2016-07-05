@@ -1,0 +1,8 @@
+#!/bin/zsh
+_GROUP_IP1='ff05::1'
+_GROUP_IP2='ff05::2'
+_VIDEO_CAPS='application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96, format=I420, framerate=30/1, width=800, height=480, interlace-mode=progressive, pixel-aspect-ratio=1/1'
+
+gst-launch-1.0 -v videomixer name=mixer sink_1::ypos=480 ! autovideosink sync=false \
+udpsrc multicast-group=$_GROUP_IP1 auto-multicast=true multicast-iface='eth0' caps=$_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! mixer. \
+udpsrc multicast-group=$_GROUP_IP2 auto-multicast=true multicast-iface='eth0' caps=$_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! mixer.
