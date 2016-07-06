@@ -1,7 +1,7 @@
 #!/bin/zsh
 _IIB1_AUDIO='ff05::3'
 _IIB2_AUDIO='ff05::4'
-_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=44100, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=44100, channels=1, layout=non-interleaved'
+_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=48000, channels=1, layout=non-interleaved'
 
 _IIB1_VIDEO='ff05::1'
 _IIB2_VIDEO='ff05::2'
@@ -10,10 +10,9 @@ _VIDEO_CAPS='application/x-rtp, media=video, clock-rate=90000, encoding-name=H26
 
 gst-launch-1.0 -e \
   oggmux name=oggmix ! queue2 ! multifilesink post-messages=true next-file=2 location=/home/leon/recordings/test%d.ogg \
-    interleave name=audiomix ! audioparse ! flacenc ! queue2 ! oggmix. \
-      udpsrc multicast-group=$_IIB1_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue2 ! audiomix. \
-      udpsrc multicast-group=$_IIB2_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue2 ! audiomix. \
+    interleave name=audiomix ! audioparse ! flacsenc ! queue2 ! oggmix. \
+      udpsrc multicast-group=$_IIB1_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! "audio/x-raw, rate=48000, format=S16LE,channels=1, layout=interleaved" ! queue2 ! audiomix. \
+      udpsrc multicast-group=$_IIB2_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! "audio/x-raw, rate=48000, format=S16LE,channels=1, layout=interleaved" ! queue2 ! audiomix. \
     videomixer name=videomix sink_1::ypos=480 ! videoconvert ! theoraenc ! queue2 ! oggmix. \
       udpsrc multicast-group=$_IIB1_VIDEO auto-multicast=true multicast-iface='eth0' caps=$_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! videomix. \
       udpsrc multicast-group=$_IIB2_VIDEO auto-multicast=true multicast-iface='eth0' caps=$_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! videomix.
-

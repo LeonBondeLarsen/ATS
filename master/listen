@@ -1,7 +1,7 @@
 #!/bin/zsh
 _IIB1_AUDIO='ff05::3'
 _IIB2_AUDIO='ff05::4'
-_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=44100, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=44100, channels=1, layout=non-interleaved'
+_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=48000, channels=1, layout=non-interleaved'
 
 ## Decode and mix as mono
 #gst-launch-1.0 -v -m adder name=mix ! autoaudiosink \
