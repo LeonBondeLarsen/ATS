@@ -1,6 +1,9 @@
 #!/usr/bin/awk -f
 
-BEGIN { FS="[][ ]+";ORS="\n" }
+BEGIN { FS="[][ ]+" }
 
-/hostname/ { if(!host_seen[$4]++) { if(!first[0]) { print $4 }}}
+$1 == "+"        { next }
+$1 == "="        { iface = $2; next }
+$2 == "hostname" { hname = $4 }
 
+iface == "eth0" && $2 == "hostname" && !hosts[hname]++ { print hname }

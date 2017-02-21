@@ -1,0 +1,4 @@
+export ATS_BOX1_CAM_IP='ff05::1'
+export ATS_BOX2_CAM_IP='ff05::2'
+export ATS_BOX1_MIC_IP='ff05::3'
+export ATS_BOX2_MIC_IP='ff05::4'

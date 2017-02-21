@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+gst-launch-1.0 -v fdsrc ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! autovideosink sync=false

@@ -1,0 +1,19 @@
+#!/bin/zsh
+_IIB1_VIDEO='ff05::1'
+_IIB2_VIDEO='ff05::2'
+_VIDEO_CAPS='application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96, format=I420, framerate=30/1, width=800, height=480, interlace-mode=progressive, pixel-aspect-ratio=1/1'
+
+_IIB1_AUDIO='ff05::3'
+_IIB2_AUDIO='ff05::4'
+_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=48000, channels=1, layout=non-interleaved'
+
+gst-launch-1.0 -v udpsrc multicast-group=$_IIB1_VIDEO auto-multicast=true multicast-iface='eth0' !  multifilesink post-messages=true next-file=4 max-file-size=100000 location=/home/leon/recordings/${_IIB1_VIDEO}_$(date +%Y-%m-%d)_%d
+
+#gst-launch-1.0 -v \
+#	videomixer name=videomixer sink_1::ypos=480 ! multifilesink post-messages=true next-file=4 max-file-size=1000000 sync=true location=/home/leon/recordings/test%d \
+#		udpsrc multicast-group=$_IIB1_VIDEO auto-multicast=true multicast-iface='eth0' caps=$_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! videomixer. \
+#		udpsrc multicast-group=$_IIB2_VIDEO auto-multicast=true multicast-iface='eth0' caps=$_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! videomixer. 
+#	interleave name=audiomixer ! vorbisenc ! queue2 ! oggmixer. \
+#		udpsrc multicast-group=$_IIB1_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! audiomixer. \
+#		udpsrc multicast-group=$_IIB2_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! audiomixer.
+

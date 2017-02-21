@@ -1,0 +1,38 @@
+#!/bin/zsh -x
+function start_recording 
+{
+
+	sudo tcpdump -i eth0 -P in -w ${_REC_PATH}/%H/${1}@%Y-%m-%d@%H:%M:%S -G 600 -Z leon host $1 &
+}
+
+function stop_recording 
+{
+	JOBS="$(jobs -p)";
+	if [ -n "${JOBS}" ]; then;
+		kill -KILL ${JOBS};
+	fi
+}
+
+function prepare_path
+{
+	_REC_PATH=$_REC_PATH/$(date +%Y-%m-%d)
+	if [ ! -d $_REC_PATH ]; then
+		mkdir -p $_REC_PATH/{08..20}/
+		chown -R leon:leon $_REC_PATH
+	fi
+}
+
+source /home/leon/scripts/ats/global_settings
+
+_REC_PATH=/home/leon/recordings
+
+prepare_path
+
+trap stop_recording SIGHUP SIGINT SIGTERM
+
+start_recording $ATS_BOX1_CAM_IP
+start_recording $ATS_BOX2_CAM_IP
+start_recording $ATS_BOX1_MIC_IP
+start_recording $ATS_BOX2_MIC_IP
+wait
+

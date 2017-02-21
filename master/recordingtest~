@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+gst-launch-1.0 -e -v \
+	oggmux name=oggmix ! multifilesink post-messages=true next-file=4 max-file-size=1000000 location=/home/leon/recordings/test%d.ogg videomixer name=videomix sink_1::ypos=480 ! videoconvert ! theoraenc ! queue2 ! oggmix. videotestsrc ! queue2 ! videomix. videotestsrc ! queue2 ! videomix. audiotestsrc ! audioconvert ! audioparse ! flacenc ! queue ! oggmix.

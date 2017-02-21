@@ -3,9 +3,6 @@
 # Script for communicating with the ATOS system
 # Author Leon Bonde Larsen <leon@bondelarsen.dk>
 #
-# To-do:
-# _ATOS_PATH is currently hardcoaded
-#
 
 run_command ()
 # All calls are made through this function in order to allow dryrun
@@ -120,9 +117,11 @@ trap exit_SIGINT SIGINT
 
 # Set variables
 _ATOS_PATH=${0%/*}/
-print $_ATOS_PATH
 _COMMAND=$2
 _UNIT=$1
+
+# Set global variables
+source $_ATOS_PATH/global_settings
 
 if [ $_UNIT = 'all' ]; then
 	for _UNIT in $(avahi-browse -lart | $_ATOS_PATH/bin/avahi-list | cut -d'.' -f1); do 

@@ -1,0 +1,11 @@
+#!/usr/bin/zsh
+
+gst-launch-1.0 -ve oggmux name=oggmix ! queue2 ! oggdemux name=d \
+	videomixer name=videomix sink_1::ypos=480 ! videoconvert ! theoraenc ! queue2 ! oggmix. \
+		videotestsrc ! videoconvert ! queue2 ! videomix. \
+		videotestsrc ! videoconvert ! queue2 ! videomix. \
+	interleave name=audiomix ! audioconvert ! vorbisenc ! queue2 ! oggmix. \
+		audiotestsrc ! audioresample ! "audio/x-raw,format=F32LE,layout=non-interleaved,channels=1" ! queue ! audiomix. \
+		audiotestsrc ! audioresample ! "audio/x-raw,format=F32LE,layout=non-interleaved,channels=1" ! queue ! audiomix. \
+	d. ! queue ! theoradec ! videoconvert ! autovideosink \
+	d. ! queue ! vorbisdec ! audioconvert ! autoaudiosink \

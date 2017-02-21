@@ -1,0 +1,9 @@
+#!/usr/bin/zsh
+
+gst-launch-1.0 -ve oggmux name=oggmix ! queue2 ! oggdemux name=d \
+	videotestsrc ! videoconvert ! theoraenc ! queue2 ! oggmix.video_1 \
+	audiotestsrc ! audioconvert ! vorbisenc ! queue2 ! oggmix.audio_1 \
+	videomixer name=videomixer sink_1::ypos=480 ! autovideosink \
+		d. ! queue ! theoradec ! videoconvert ! videomixer \
+		d. ! queue ! theoradec ! videoconvert ! videomixer \
+	d. ! queue ! vorbisdec ! audioconvert ! autoaudiosink 

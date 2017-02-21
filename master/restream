@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+gst-launch-1.0 -v fdsrc ! 'application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96, format=I444, framerate=25/1, width=800, height=480, interlace-mode=progressive, pixel-aspect-ratio=1/1' ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! autovideosink sync=false

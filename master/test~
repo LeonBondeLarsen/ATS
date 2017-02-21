@@ -1,25 +1,3 @@
 #!/bin/zsh
-_IIB1_AUDIO='ff05::3'
-_IIB2_AUDIO='ff05::4'
-_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=44100, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=44100, channels=1, layout=non-interleaved'
 
-_IIB1_VIDEO='ff05::1'
-_IIB2_VIDEO='ff05::2'
-_VIDEO_CAPS='application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96, format=I420, framerate=30/1, width=800, height=480, interlace-mode=progressive, pixel-aspect-ratio=1/1'
-#audioconvert ! audio/x-raw,format=F32LE,rate=44100,channels=2,layout=interleaved !
-# multifilesink post-messages=true max-file-duration=1000000000 location=/home/leon/recordings/test%d.ogg
-# Decode and mix as stereo (box1 in left and box2 in right)
-gst-launch-1.0 -e \
-  interleave name=audiomix ! "audio/x-raw, format=F32LE, rate=44100, channels=2, layout=interleaved" ! audioparse ! flacenc ! fakesink \
-    audiotestsrc ! audioconvert ! "audio/x-raw, format=S16BE,rate=44100, clock-rate=44100, channels=1, layout=interleaved" ! audioconvert ! rtpL16pay ! rtpL16depay ! audioconvert ! queue2 ! audiomix. \
-    audiotestsrc ! audioconvert ! "audio/x-raw, format=S16BE,rate=44100, clock-rate=44100, channels=1, layout=interleaved" ! audioconvert ! rtpL16pay ! rtpL16depay ! audioconvert ! queue2 ! audiomix.
-
-
-#
-#  oggmux name=oggmix ! queue2 ! fakesink interleave name=audiomix ! vorbisenc ! queue2 ! oggmix. \
-#      audiotestsrc ! audioconvert ! rtpL16pay ! caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue2 ! audiomix. \
-#      udpsrc multicast-group=$_IIB2_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue2 ! audiomix. \
-#    videomixer name=videomix sink_1::ypos=480 ! videoconvert ! theoraenc ! queue2 ! oggmix. \
-#      udpsrc multicast-group=$_IIB1_VIDEO auto-multicast=true multicast-iface='eth0' caps=$_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! videomix. \
-#      udpsrc multicast-group=$_IIB2_VIDEO auto-multicast=true multicast-iface='eth0' caps=$_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! videomix.
-#
+gst-launch-1.0 -e -v filesrc location=/home/leon/Desktop/small.ogv ! queue2 ! shout2send ip=192.168.100.102 port=8000 username=source password=halogenlampe mount=/test.ogv \

@@ -35,16 +35,7 @@ _E04="video/x-raw, format=I420, width=800, height=480, pixel-aspect-ratio=1/1, i
 _E05="video/x-raw, framerate=25/1, width=800, height=480"
 _E06="video/x-raw, format=I420, width=800, height=480, pixel-aspect-ratio=1/1, interlace-mode=progressive, colorimetry=bt601, framerate=25/1"
 
-gst-launch-1.0 -e -v \
-  oggmux name=oggmix ! $_A01 ! queue2 ! $_A02 ! multifilesink post-messages=true next-file=4 max-file-size=1000000 location=/home/leon/recordings/test%d.ogg \
-  
-  interleave name=audiomix ! audioparse ! $_B02 ! flacenc ! $_B03 ! queue2 ! oggmix. \
-
-  udpsrc multicast-group=$_IIB1_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! $_C03 ! queue2 ! audiomix. \
-  udpsrc multicast-group=$_IIB2_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! $_C03 ! queue2 ! audiomix. \
-  
-  videomixer name=videomix sink_1::ypos=480 ! videoconvert ! $_D02 ! videoparse framerate=25/1 width=800 height=960 interlaced=true format=2 ! $_D03 ! theoraenc ! $_D04 ! queue2 ! oggmix. \
-
+gst-launch-1.0 -e -v videomixer name=videomix sink_1::ypos=480 ! videoconvert ! $_D02 ! videoparse framerate=25/1 width=800 height=960 interlaced=true format=2 ! $_D03 ! theoraenc ! $_D04 ! queue2 ! $_A01 ! queue2 ! $_A02 ! multifilesink post-messages=true next-file=4 max-file-size=1000000 location=/home/leon/recordings/test%d.ogg \
   udpsrc multicast-group=$_IIB1_VIDEO auto-multicast=true multicast-iface='eth0' caps=$_VIDEO_CAPS ! rtph264depay ! $_E02 ! h264parse ! avdec_h264 ! $_E04 ! videoconvert ! $_E05 ! queue2 ! $_E06 ! videomix. \
   udpsrc multicast-group=$_IIB2_VIDEO auto-multicast=true multicast-iface='eth0' caps=$_VIDEO_CAPS ! rtph264depay ! $_E02 ! h264parse ! avdec_h264 ! $_E04 ! videoconvert ! $_E05 ! queue2 ! $_E06 ! videomix.
 
