@@ -22,7 +22,7 @@ _BUFFER=4194304
  
 # Two channels
 sudo ./array-tools-1.0/adc/grab -f 2500000 -B $_BUFFER -vv | \
- 	sox -c8 -r312500 -t s16 - -c 2 -r 44100 -t s16  - |  \
+ 	sox -c8 -r312500 -t s16 - -t s16 - remix 1 2 rate 44100 |  \
  	stdbuf -i0 -o0 gst-launch-1.0 -e fdsrc ! "audio/x-raw, format=S16BE,rate=44100, clock-rate=44100, channels=2, layout=interleaved" ! deinterleave name=d \
         d.src_0 ! queue ! audioconvert ! rtpL16pay ! udpsink host=$ATS_BOX1_MIC_IP auto-multicast=true \
         d.src_1 ! queue ! audioconvert ! rtpL16pay ! udpsink host=$ATS_BOX2_MIC_IP auto-multicast=true
