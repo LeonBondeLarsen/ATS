@@ -1,0 +1,4 @@
+#!/usr/bin/zsh
+
+mkdir $(date +%Y-%m-%d)
+sudo tcpdump -i br0 -P in -w /home/pip00/birds_2017/%Y-%m-%d/%H:%M:%S -G 60 -Z pip00

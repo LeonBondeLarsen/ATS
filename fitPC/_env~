@@ -1,0 +1,5 @@
+_REMOTE_USER='pi'
+_REMOTE_HOST='box12mic'
+_REMOTE_WORKSPACE='/home/pi/'
+_STARTUP_SCRIPT='_stream'
+

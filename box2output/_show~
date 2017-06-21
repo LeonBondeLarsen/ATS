@@ -9,7 +9,7 @@ _AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=44100, encoding-name=L16
 amixer cset name='PCM Playback Route' 1
 
 gst-launch-1.0 -e udpsrc multicast-group=$ATS_BOX1_CAM_IP auto-multicast=true caps=$_VIDEO_CAPS  ! rtph264depay ! h264parse ! omxh264dec ! videobalance brightness=0.0 contrast=1.0 hue=0.0 saturation=1.5 ! videoconvert ! videoflip method=rotate-180 ! autovideosink sync=true &
-gst-launch-1.0 -e udpsrc multicast-group=$ATS_BOX1_MIC_IP multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! alsasink device="hw:0,0"
+gst-launch-1.0 -e udpsrc multicast-group=$ATS_BOX1_MIC_IP multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! volume volume=$ATS_BOX2_VOLUME alsasink device="hw:0,0"
 
 
 

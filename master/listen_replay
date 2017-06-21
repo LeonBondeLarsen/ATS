@@ -1,0 +1,42 @@
+#!/bin/zsh
+#_VIDEO_IP='ff05::2'
+#_AUDIO_IP='ff05::4'
+
+_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=44100, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=44100, channels=1, layout=interleaved'
+
+# Force audio output to 3.5mm jack
+#amixer cset name='PCM Playback Route' 1
+
+#gst-launch-1.0 -e udpsrc multicast-group=$ATS_BOX2_CAM_IP auto-multicast=true caps=$_VIDEO_CAPS  ! rtph264depay ! h264parse ! omxh264dec ! videobalance brightness=0.0 contrast=1.0 hue=0.0 saturation=1.5 ! videoconvert ! videoflip method=rotate-180 ! autovideosink sync=true &
+#gst-launch-1.0 -e udpsrc multicast-group=$ATS_BOX2_MIC_IP multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! volume volume=$ATS_BOX1_VOLUME ! alsasink device="hw:0,0"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#!/bin/zsh
+_IIB1_AUDIO='ff05::30'
+_IIB2_AUDIO='ff05::40'
+#_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=48000, channels=1, layout=non-interleaved'
+
+## Decode and mix as mono
+#gst-launch-1.0 -v -m adder name=mix ! autoaudiosink \
+#	udpsrc multicast-group=$_IIB1_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! mix. \
+#	udpsrc multicast-group=$_IIB2_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! mix.
+
+# Decode and mix as stereo (box1 in left and box2 in right)
+gst-launch-1.0 -v -m interleave name=mix ! autoaudiosink \
+	udpsrc multicast-group=$_IIB1_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix. \
+	udpsrc multicast-group=$_IIB2_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix.
+

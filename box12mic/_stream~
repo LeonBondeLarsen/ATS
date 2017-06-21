@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Set up device
-echo gain 1 0x00 on | nc -4u -w1 localhost 4000
-echo gain 2 0x00 on | nc -4u -w1 localhost 4000
+echo gain 1 0x90 on | nc -4u -w1 localhost 4000
+echo gain 2 0x90 on | nc -4u -w1 localhost 4000
 
 # Play beep
 #gst-launch-1.0 -v -m audiotestsrc ! audioresample ! audioconvert ! rtpL16pay ! udpsink host='ff05::3' auto-multicast=true
@@ -23,7 +23,7 @@ _BUFFER=4194304
 # Two channels
 sudo ./array-tools-1.0/adc/grab -f 2500000 -B $_BUFFER -vv | \
  	sox -c8 -r312500 -t s16 - -t s16 - remix 1 2 rate 44100 |  \
- 	stdbuf -i0 -o0 gst-launch-1.0 -e fdsrc ! "audio/x-raw, format=S16BE,rate=44100, clock-rate=44100, channels=2, layout=interleaved" ! deinterleave name=d \
+ 	stdbuf -i0 -o0 gst-launch-1.0 -e fdsrc ! "audio/x-raw, format=S16LE,rate=44100, clock-rate=44100, channels=2, layout=interleaved" ! deinterleave name=d \
         d.src_0 ! queue ! audioconvert ! rtpL16pay ! udpsink host=$ATS_BOX1_MIC_IP auto-multicast=true \
         d.src_1 ! queue ! audioconvert ! rtpL16pay ! udpsink host=$ATS_BOX2_MIC_IP auto-multicast=true
 

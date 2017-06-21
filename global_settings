@@ -3,5 +3,5 @@ export ATS_BOX2_CAM_IP='ff05::2'
 export ATS_BOX1_MIC_IP='ff05::3'
 export ATS_BOX2_MIC_IP='ff05::4'
 
-export ATS_BOX1_VOLUME=0.0
-export ATS_BOX2_VOLUME=0.0
+export ATS_BOX1_VOLUME=2.0
+export ATS_BOX2_VOLUME=2.0

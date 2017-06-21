@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Set up device
-echo gain 1 0x00 on | nc -4u -w1 localhost 4000
-echo gain 2 0x00 on | nc -4u -w1 localhost 4000
+echo gain 1 0x90 on | nc -4u -w1 localhost 4000
+echo gain 2 0x90 on | nc -4u -w1 localhost 4000
 
 # Play beep
 #gst-launch-1.0 -v -m audiotestsrc ! audioresample ! audioconvert ! rtpL16pay ! udpsink host='ff05::3' auto-multicast=true

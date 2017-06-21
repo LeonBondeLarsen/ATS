@@ -1,15 +1,12 @@
 #!/bin/zsh
+_IFACE='eth0'
+_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=44100, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=44100, channels=1, layout=interleaved'
 _IIB1_AUDIO='ff05::3'
 _IIB2_AUDIO='ff05::4'
-_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=48000, channels=1, layout=non-interleaved'
 
-## Decode and mix as mono
-#gst-launch-1.0 -v -m adder name=mix ! autoaudiosink \
-#	udpsrc multicast-group=$_IIB1_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! mix. \
-#	udpsrc multicast-group=$_IIB2_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! mix.
 
 # Decode and mix as stereo (box1 in left and box2 in right)
 gst-launch-1.0 -v -m interleave name=mix ! autoaudiosink \
-	udpsrc multicast-group=$_IIB1_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix. \
-	udpsrc multicast-group=$_IIB2_AUDIO multicast-iface='eth0' auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix.
+	udpsrc multicast-group=$_IIB1_AUDIO multicast-iface=$_IFACE auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix. \
+	udpsrc multicast-group=$_IIB2_AUDIO multicast-iface=$_IFACE auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix.
 
