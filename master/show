@@ -1,5 +1,5 @@
 #!/bin/zsh
-_IFACE='eth0'
+_IFACE='labvpn'
 _IIB1_VIDEO='ff05::1'
 _IIB2_VIDEO='ff05::2'
 _VIDEO_CAPS='application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96, format=I420, framerate=30/1, width=800, height=480, interlace-mode=progressive, pixel-aspect-ratio=1/1'

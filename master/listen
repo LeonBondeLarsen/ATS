@@ -1,5 +1,5 @@
 #!/bin/zsh
-_IFACE='eth0'
+_IFACE='labvpn'
 _AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=44100, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=44100, channels=1, layout=interleaved'
 _IIB1_AUDIO='ff05::3'
 _IIB2_AUDIO='ff05::4'

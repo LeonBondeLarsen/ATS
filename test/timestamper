@@ -1,0 +1,92 @@
+#!/bin/bash
+source global_settings
+_IFACE='eth0'
+_TEXT_CAPS='text/x-raw'
+
+ats_kill_threads ()
+{
+	for PID in $PIDS; do
+		echo "Checking PID $PID"
+		if [[ -e /proc/$PID ]]; then
+			echo "Killing PID $PID"
+			kill -KILL $PID
+		fi
+	done
+}
+
+ats_clean_up ()
+{
+	echo
+	echo "SIGINT received"
+	echo "Killing threads"
+	ats_kill_threads
+}
+
+echo "Starting threads"
+
+#PIDS+=$!
+#PIDS+=$!
+
+gst-launch-1.0 -q udpsrc multicast-group=$ATS_MONITOR01_FRONT_PERCH_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do timestamp=$(date +%T.%6N);if [[ $1 = 'on' ]];then echo $timestamp >&1;else echo $timestamp >&2;fi;done | gst-launch-1.0 -q fdsrc fd=1 ! udpsink host=$ATS_MONITOR01_BACK_PERCH_ON_IP auto-multicast=true | gst-launch-1.0 -q fdsrc fd=2 ! udpsink host=$ATS_MONITOR01_BACK_PERCH_OFF_IP auto-multicast=true &
+PIDS+=$!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
+#
+#	gst-launch-1.0 -q udpsrc multicast-group=$ATS_MONITOR01_BACK_PERCH_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do ats_create_timestamp $line $_b1bp; done &
+#	PIDS+=$!
+#
+#	gst-launch-1.0 -q udpsrc multicast-group=$ATS_MONITOR02_FRONT_PERCH_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do ats_create_timestamp $line $_b2fp; done &
+#	PIDS+=$!
+#
+#	gst-launch-1.0 -q udpsrc multicast-group=$ATS_MONITOR02_BACK_PERCH_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do ats_create_timestamp $line $_b2bp; done &
+#	PIDS+=$!
+#
+#	sleep 1
+#
+#	echo "All threads started, waiting for SIGINT"
+#	echo "PIDS: $PIDS"
+#
+# Trap and kill all threads
+trap ats_clean_up SIGINT
+#
+wait
+#
+#
+#
+
+
+#while true; do
+#	sleep 1
+#	echo test1
+#done > $_PIPE &
+#_PIDS[0]=$!
+#
+#while true; do
+#	sleep 1
+#	echo test2
+#done > $_PIPE &
+#_PIDS[1]=$!
+#
+#while true; do
+#	sleep 1
+#	echo test3
+#done > $_PIPE &
+#_PIDS[2]=$!
+#
+#trap "kill -KILL ${_PIDS[*]}" SIGINT
+#wait

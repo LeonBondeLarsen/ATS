@@ -1,0 +1,3 @@
+#!/usr/bin/zsh
+
+gst-launch-1.0 -e -vvv udpsrc multicast-group='ff05::5' auto-multicast=true caps = "text/x-raw, format=pango-markup" ! txt.   videotestsrc ! textoverlay name=txt shaded-background=yes ! queue2 ! autovideosink sync=false

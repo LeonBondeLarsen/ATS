@@ -1,0 +1,52 @@
+#!/bin/bash
+source global_settings
+_IFACE='eth0'
+_TEXT_CAPS='text/x-raw'
+
+echo $ATS_MONITOR02_TEMPERATURE_IP
+echo $ATS_MONITOR02_HUMIDITY_IP
+echo $ATS_MONITOR02_PRESSURE_IP
+echo $ATS_MONITOR02_FRONT_PERCH_IP
+echo $ATS_MONITOR02_BACK_PERCH_IP
+
+# Start threads
+gst-launch-1.0 -e -v udpsrc multicast-group=$ATS_MONITOR01_TEMPERATURE_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do echo "Temperature in box 1 is $line degrees"; done & 
+PIDS[0]=$!
+
+gst-launch-1.0 -e -v udpsrc multicast-group=$ATS_MONITOR01_PRESSURE_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do echo "Pressure in box 1 is $line Pa"; done &
+PIDS[1]=$!
+
+gst-launch-1.0 -e -v udpsrc multicast-group=$ATS_MONITOR01_HUMIDITY_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do echo "Humidity in box 1 is $line%"; done &
+PIDS[2]=$!
+
+gst-launch-1.0 -e -v udpsrc multicast-group=$ATS_MONITOR01_FRONT_PERCH_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do echo "State of front perch in box 1 is $line"; done &
+PIDS[3]=$!
+
+gst-launch-1.0 -e -v udpsrc multicast-group=$ATS_MONITOR01_BACK_PERCH_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do echo "State of back perch in box 1 is $line"; done &
+PIDS[4]=$!
+
+gst-launch-1.0 -e -v udpsrc multicast-group=$ATS_MONITOR02_TEMPERATURE_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do echo "Temperature in box 2 is $line degrees"; done & 
+PIDS[5]=$!
+
+gst-launch-1.0 -e -v udpsrc multicast-group=$ATS_MONITOR02_PRESSURE_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do echo "Pressure in box 2 is $line Pa"; done &
+PIDS[6]=$!
+
+gst-launch-1.0 -e -v udpsrc multicast-group=$ATS_MONITOR02_HUMIDITY_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do echo "Humidity in box 2 is $line%"; done &
+PIDS[7]=$!
+
+gst-launch-1.0 -e -v udpsrc multicast-group=$ATS_MONITOR02_FRONT_PERCH_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do echo "State of front perch in box 2 is $line"; done &
+PIDS[8]=$!
+
+gst-launch-1.0 -e -v udpsrc multicast-group=$ATS_MONITOR02_BACK_PERCH_IP auto-multicast=true multicast-iface=$_IFACE caps=$_TEXT_CAPS ! "text/x-raw" ! fdsink | while read line; do echo "State of back perch in box 2 is $line"; done &
+PIDS[9]=$!
+
+
+
+# Trap and kill all threads
+trap "kill -KILL ${PIDS[*]}" SIGINT
+
+wait
+
+
+
+
