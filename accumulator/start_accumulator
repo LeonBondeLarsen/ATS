@@ -1,0 +1,27 @@
+#!/usr/bin/zsh 
+
+
+accumulator/start_timestampers &
+PIDS[0]=$!
+
+accumulator/accumulator /tmp/m01 &
+PIDS[1]=$!
+
+accumulator/accumulator /tmp/m02 &
+PIDS[2]=$!
+
+# my_func() {
+#  jobs > /tmp/dims
+#  cat /tmp/dims | grep -o '[0-9]\+'
+#  #jobs | grep -o '[0-9]\+' 
+#  #echo $jbs
+#  #kill -SIGINT $jbs
+#}
+
+#echo "kill -SIGINT $(jobs | awk -F'[][]' '{print "%"$2} END{printf "\n"} ' ORS=' ')"
+trap "kill -SIGINT ${PIDS[@]}" SIGINT
+#trap "kill -SIGINT $(jobs | awk '/[0-9]/ {gsub("\\[","%");gsub("\\]","");gsub("\\+","");gsub("\\-","");print $1}' | awk '{printf("%s ", $0)}' )" SIGINT
+wait
+
+#watch -d -t tail -n1 /tmp/m0{1,2}_acc
+

@@ -17,11 +17,9 @@ PIDS[1]=$!
 while true;do sleep 60;python ~/bin/get_humidity.py;done | gst-launch-1.0 -e -v fdsrc ! "text/x-raw" ! udpsink host=$ATS_MONITOR02_HUMIDITY_IP auto-multicast=true &
 PIDS[2]=$!
 
-while true;do sleep 2;cat /sys/class/gpio/gpio17/value;done | while read line;do if [[ $line -eq 0 ]];then echo on;else echo off;fi;done | gst-launch-1.0 -e -v fdsrc ! "text/x-raw" ! udpsink host=$ATS_MONITOR02_FRONT_PERCH_IP auto-multicast=true &
+while true;do sleep 2;_p1=$(cat /sys/class/gpio/gpio17/value);_p2=$(cat /sys/class/gpio/gpio27/value);echo $_p1,$_p2;done | gst-launch-1.0 -e -v fdsrc ! "text/x-raw" ! udpsink host=$ATS_MONITOR02_PERCH_IP auto-multicast=true &
 PIDS[3]=$!
 
-while true;do sleep 2;cat /sys/class/gpio/gpio27/value;done | while read line;do if [[ $line -eq 0 ]];then echo on;else echo off;fi;done  | gst-launch-1.0 -e -v fdsrc ! "text/x-raw" ! udpsink host=$ATS_MONITOR02_BACK_PERCH_IP auto-multicast=true &
-PIDS[4]=$!
 
 
 # Trap and kill all threads

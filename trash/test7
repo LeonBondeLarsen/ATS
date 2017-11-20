@@ -1,0 +1,21 @@
+#!/usr/bin/zsh
+
+global_variable=0
+
+some_function()
+{
+	if [[ global_variable -eq 0 ]]
+	then
+		echo "ran first time"
+		global_variable=1
+	else
+		echo "ran again"
+
+	fi
+}
+
+while true
+do
+	some_function
+	sleep 1
+done

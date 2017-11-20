@@ -1,0 +1,17 @@
+#!/bin/bash
+_IP=$1
+_IFACE=$2
+_FIFO_NAME=$3
+
+# Create fifos
+mkfifo ${_FIFO_NAME}
+
+# Open fifos as RW to make sure they remain open
+exec 3<>${_FIFO_NAME}
+
+trap "rm ${_FIFO_NAME}" SIGINT 
+
+# Generate data in fifos
+gst-launch-1.0 -q udpsrc multicast-group=$_IP auto-multicast=true multicast-iface=$_IFACE ! "text/x-raw" ! fdsink | while read line;do echo $(date +%T.%3N),$line>&3;done 
+
+

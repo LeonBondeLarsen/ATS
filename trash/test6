@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cat /tmp/m01bpoff \
+	| while read line
+do echo $line
+done

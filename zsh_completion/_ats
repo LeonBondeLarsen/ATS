@@ -1,0 +1,3 @@
+#compdef ats
+
+_arguments "1: :(all box1cam box2cam box12mic box1output box2output fitPC monitor01 monitor02 accumulator)" "2: :(net poweroff reboot ssh start stop)"

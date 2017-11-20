@@ -1,0 +1,91 @@
+#!/usr/bin/zsh
+_ms_on=0
+_last=reset
+_time_on=0:0:0:0
+_difference=0
+
+trap "kill -SIGINT $(jobs | awk '/[0-9]/ {gsub("\[","%");gsub("\]","");gsub("\+","");gsub("\-","");print $1}' | awk '{printf("%s ", $0)}' )" SIGINT
+
+get_difference ()
+{
+	if [[ $_last = reset ]]
+	then
+		# Reset variables
+		_last=$2
+		_ms_on=0
+		echo "get_difference called first time"
+	else
+		if [[ $(echo $1 | rev | cut -c 1-2 | rev) = ff ]]
+		then
+			_difference=$(./time_diff $_last $2)
+			_ms_on+=$_difference
+		else
+			_difference=0
+		fi
+		
+		_last=$2
+	fi 
+
+}
+
+accumulate ()
+{
+	while read line
+	do 	
+		
+		# Calculate the time difference between current and previous timestamp
+		get_difference $1 $line
+
+		# Add the difference to the accumulated value
+		#_ms_on=$(($_ms_on+$_difference))
+
+		#echo diff: $_difference on: $_ms_on  $(convert_to_time_on $_ms_on) 
+	done 
+
+}
+
+convert_to_time_on ()
+{
+	_ms=$1
+
+	# Calculate days
+	_days=$(($_ms/(24*60*60*1000)))
+	_ms=$(($_ms-($_days*24*60*60*1000)))
+	_days=$(printf "%d" $_days)
+
+	# Calculate hours
+	_hours=$(($_ms/(60*60*1000)))
+	_ms=$(($_ms-($_hours*60*60*1000)))
+	_hours=$(printf "%02d" $_hours)
+
+	# Calculate minutes
+	_min=$(($_ms/(60*1000)))
+	_ms=$(($_ms-($_min*60*1000)))
+	_min=$(printf "%02d" $_min)
+
+	# Calculate seconds
+	_sec=$(($_ms/1000))
+	_ms=$(($_ms-($_sec*1000)))
+	_sec=$(printf "%02d" $_sec)
+
+	# Calculate milliseconds
+	_ms=$(printf "%03d" $_ms)
+
+	echo "${_days}:${_hours}:${_min}:${_sec}"
+}
+
+cat $1 | accumulate $1 & 
+cat $2 | accumulate $1 &
+
+ 
+
+
+while true
+do
+	#clear
+	echo $_ms_on
+	#echo $(convert_to_time_on $_ms_on) 
+	sleep 1
+done 
+
+

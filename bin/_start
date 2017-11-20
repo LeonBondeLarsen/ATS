@@ -1,10 +1,18 @@
 #!/bin/bash
 
+# Transfer latest version of the unit folder
+scp -r ${_ATOS_PATH}${_UNIT} ${_REMOTE_USER}@\[${_REMOTE_IP}%eth0\]:${_REMOTE_WORKSPACE}
 
 # Transfer latest version of script to execute
-scp ${_ATOS_PATH}${_UNIT}/${_STARTUP_SCRIPT} ${_REMOTE_USER}@\[${_REMOTE_IP}%eth0\]:${_REMOTE_WORKSPACE}
+#scp ${_ATOS_PATH}${_UNIT}/${_STARTUP_SCRIPT} ${_REMOTE_USER}@\[${_REMOTE_IP}%eth0\]:${_REMOTE_WORKSPACE}
+
+# Transfer global settings
 scp ${_ATOS_PATH}global_settings ${_REMOTE_USER}@\[${_REMOTE_IP}%eth0\]:${_REMOTE_WORKSPACE}
+
+# Source the global settings
 send_tmux '.' 'Space' "${_REMOTE_WORKSPACE}global_settings" 'Enter'
-send_tmux "${_REMOTE_WORKSPACE}${_STARTUP_SCRIPT}" 'Enter'
+
+# Run the startup script
+send_tmux "${_REMOTE_WORKSPACE}${_UNIT}/${_STARTUP_SCRIPT}" 'Enter'
 
 

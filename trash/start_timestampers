@@ -1,0 +1,12 @@
+#!/bin/bash
+set -m
+source global_settings
+_IFACE=eth0
+
+/home/leon/Documents/scripts/ats/test/timestamper $ATS_MONITOR01_FRONT_PERCH_IP $_IFACE /tmp/m01fp &
+/home/leon/Documents/scripts/ats/test/timestamper $ATS_MONITOR01_BACK_PERCH_IP $_IFACE /tmp/m01bp &
+/home/leon/Documents/scripts/ats/test/timestamper $ATS_MONITOR02_FRONT_PERCH_IP $_IFACE /tmp/m02fp &
+/home/leon/Documents/scripts/ats/test/timestamper $ATS_MONITOR02_BACK_PERCH_IP $_IFACE /tmp/m02bp &
+
+trap "kill -SIGINT $(jobs | awk '/[0-9]/ {gsub("\[","%");gsub("\]","");gsub("\+","");gsub("\-","");print $1}' | awk '{printf("%s ", $0)}' )" SIGINT
+wait

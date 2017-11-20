@@ -1,0 +1,211 @@
+#!/usr/bin/zsh 
+_state=INIT  		# INIT,FRONT,BACK,BOTTOM,ERROR
+
+_front_ms=0
+_back_ms=0
+_bottom_ms=0
+_error_ms=0
+
+_front_time=0:00:00:00
+_back_time=0:00:00:00
+_bottom_time=0:00:00:00
+_error_time=0:00:00:00
+
+_last=0
+_difference=0
+
+
+convert_to_ms()
+{
+  read -r d h m s <<< $(echo $1 | tr '.:' ' ' )
+  echo $(((d*24*60*60*1000)+(h*60*60*1000)+(m*60*1000)+(s*1000)))
+}
+
+convert_to_time ()
+{
+	_ms=$1
+
+	# Calculate days
+	_days=$(($_ms/(24*60*60*1000)))
+	_ms=$(($_ms-($_days*24*60*60*1000)))
+	_days=$(printf "%d" $_days)
+
+	# Calculate hours
+	_hours=$(($_ms/(60*60*1000)))
+	_ms=$(($_ms-($_hours*60*60*1000)))
+	_hours=$(printf "%02d" $_hours)
+
+	# Calculate minutes
+	_min=$(($_ms/(60*1000)))
+	_ms=$(($_ms-($_min*60*1000)))
+	_min=$(printf "%02d" $_min)
+
+	# Calculate seconds
+	_sec=$(($_ms/1000))
+	_ms=$(($_ms-($_sec*1000)))
+	_sec=$(printf "%02d" $_sec)
+
+	# Calculate milliseconds
+	_ms=$(printf "%03d" $_ms)
+
+	#echo "${_days}:${_hours}:${_min}:${_sec}"
+
+	case $2 in
+	front)
+		_front_time="${_days}:${_hours}:${_min}:${_sec}"
+	;;
+	back)
+		_back_time="${_days}:${_hours}:${_min}:${_sec}"
+		;;
+	bottom)
+		_bottom_time="${_days}:${_hours}:${_min}:${_sec}"
+		;;
+	error)
+		_error_time="${_days}:${_hours}:${_min}:${_sec}"
+		;;
+	*)
+		;;
+	esac
+}
+
+echo Starting accumulator...
+
+# If the _acc file already exists
+if [[ -e ${1}_acc ]]
+then
+	echo reading old values
+
+	tail -n1 ${1}_acc | tr -d '[:space:],[:alpha:]' | IFS='|'  read -r _front_time _back_time _bottom_time _error_time 
+	_front_ms=$(convert_to_ms $_front_time)
+	_back_ms=$(convert_to_ms $_back_time)
+	_bottom_ms=$(convert_to_ms $_bottom_time)
+	_error_ms=$(convert_to_ms $_error_time)
+	echo UPDATE - Front $_front_time \| Back $_back_time \| Bottom $_bottom_time \| Error $_error_time
+	echo UPDATE - Front $_front_ms \| Back $_back_ms \| Bottom $_bottom_ms \| Error $_error_ms
+else
+	touch ${1}_acc
+fi
+
+cat $1 | while IFS=',' read -rA _line
+	do 
+#		echo Line is: ${_line[1]} and ${_line[2]} and ${_line[3]}	
+		if [[ $_state = INIT ]]
+		then
+			if [[ ${_line[2]} = 0 && ${_line[3]} = 1 ]]
+			then
+				# Bird is on front perch
+				_state=FRONT
+			elif [[ ${_line[2]} = 1 && ${_line[3]} = 0 ]]
+			then
+			 	# Bird is on back perch 
+				_state=BACK
+			elif [[ ${_line[2]} = 1 && ${_line[3]} = 1 ]]
+			then
+				# Bird is not on a perch
+				_state=BOTTOM
+			else
+				# Bird is on both perches
+				_state=ERROR
+				echo "The bird was on both perches at time ${_line[1]}"
+			fi
+
+	
+		elif [[ $_state = FRONT ]]
+		then
+			if [[ ${_line[2]} = 0 && ${_line[3]} = 1 ]]
+			then
+				# Bird is on front perch
+				_difference=$(./accumulator/time_diff $_last ${_line[1]})
+				_front_ms=$(( $_front_ms+$_difference ))
+				convert_to_time _front_ms front
+			elif [[ ${_line[2]} = 1 && ${_line[3]} = 0 ]]
+			then
+			 	# Bird is on back perch 
+				_state=BACK
+			elif [[ ${_line[2]} = 1 && ${_line[3]} = 1 ]]
+			then
+				# Bird is not on a perch
+				_state=BOTTOM
+			elif [[ ${_line[2]} = 0 && ${_line[3]} = 0 ]]
+			then
+				# Bird is on both perches
+				_state=ERROR
+				echo "The bird was on both perches at time ${_line[1]}"
+			fi
+
+		elif [[ $_state = BACK ]]
+		then
+			if [[ ${_line[2]} = 0 && ${_line[3]} = 1 ]]
+			then
+				# Bird is on front perch
+				_state=FRONT
+			elif [[ ${_line[2]} = 1 && ${_line[3]} = 0 ]]
+			then
+			 	# Bird is on back perch 
+				_difference=$(./accumulator/time_diff $_last ${_line[1]})
+				_back_ms=$(( $_back_ms+$_difference ))
+				convert_to_time _back_ms back
+			elif [[ ${_line[2]} = 1 && ${_line[3]} = 1 ]]
+			then
+				# Bird is not on a perch
+				_state=BOTTOM
+			elif [[ ${_line[2]} = 0 && ${_line[3]} = 0 ]]
+			then
+				# Bird is on both perches
+				_state=ERROR
+				echo "The bird was on both perches at time ${_line[1]}"
+			fi
+		 
+		elif [[ $_state = BOTTOM ]]
+		then
+			if [[ ${_line[2]} = 0 && ${_line[3]} = 1 ]]
+			then
+				# Bird is on front perch
+				_state=FRONT
+			elif [[ ${_line[2]} = 1 && ${_line[3]} = 0 ]]
+			then
+			 	# Bird is on back perch 
+				_state=BACK
+			elif [[ ${_line[2]} = 1 && ${_line[3]} = 1 ]]
+			then
+				# Bird is not on a perch
+				_difference=$(./accumulator/time_diff $_last ${_line[1]})
+				_bottom_ms=$(( $_bottom_ms+$_difference ))
+				convert_to_time _bottom_ms bottom
+			elif [[ ${_line[2]} = 0 && ${_line[3]} = 0 ]]
+			then
+				# Bird is on both perches
+				echo "The bird was on both perches at time ${_line[1]}"
+				_state=ERROR
+			fi
+
+
+		elif [[ $_state = ERROR ]]
+		then
+			if [[ ${_line[2]} = 0 && ${_line[3]} = 1 ]]
+			then
+				# Bird is on front perch
+				_state=FRONT
+			elif [[ ${_line[2]} = 1 && ${_line[3]} = 0 ]]
+			then
+			 	# Bird is on back perch 
+				_state=BACK
+			elif [[ ${_line[2]} = 1 && ${_line[3]} = 1 ]]
+			then
+				# Bird is not on a perch
+				_state=BOTTOM
+			elif [[ ${_line[2]} = 0 && ${_line[3]} = 0 ]]
+			then
+				# Bird is on both perches
+				_difference=$(./accumulator/time_diff $_last ${_line[1]})
+				_error_ms=$(( $_error_ms+$_difference ))
+				convert_to_time _error_ms error
+				echo "The bird was on both perches at time ${_line[1]}"
+			fi
+		fi
+		
+		_last=$_line[1]
+		echo Front $_front_time \| Back $_back_time \| Bottom $_bottom_time \| Error $_error_time >>${1}_acc
+	done 
+
+#watch -d -t tail -n1 m0{1,2}_acc 

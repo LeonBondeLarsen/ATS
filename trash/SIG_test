@@ -1,0 +1,14 @@
+#!/usr/bin/zsh
+set -m
+
+tail -f /var/log/syslog 1>/dev/null &
+tail -f /var/log/syslog 1>/dev/null &
+tail -f /var/log/syslog 1>/dev/null &
+
+
+#echo "kill -SIGINT $(jobs | awk -F'[][]' '{print "%"$2} END{printf "\n"} ' ORS=' ')"
+trap "kill -SIGINT $(jobs | awk -F'[][]' '{print "%"$2} END{printf "\n"} ' ORS=' ')" SIGINT
+#trap kill_all SIGINT
+wait
+
+

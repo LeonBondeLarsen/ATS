@@ -1,0 +1,5 @@
+_REMOTE_USER='pi'
+_REMOTE_HOST='accumulator'
+_REMOTE_WORKSPACE='/home/pi/'
+_STARTUP_SCRIPT='start_accumulator'
+
