@@ -6,4 +6,4 @@ $1 == "+"        { next }
 $1 == "="        { iface = $2; next }
 $2 == "hostname" { hname = $4 }
 
-iface == "eth0" && $2 == "hostname" && !hosts[hname]++ { print hname }
+iface == _iface && $2 == "hostname" && !hosts[hname]++ { print hname }

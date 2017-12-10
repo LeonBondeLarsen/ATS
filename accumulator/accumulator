@@ -23,7 +23,7 @@ convert_to_ms()
 
 convert_to_time ()
 {
-	_ms=$1
+	_ms=_${1}_ms
 
 	# Calculate days
 	_days=$(($_ms/(24*60*60*1000)))
@@ -50,7 +50,7 @@ convert_to_time ()
 
 	#echo "${_days}:${_hours}:${_min}:${_sec}"
 
-	case $2 in
+	case $1 in
 	front)
 		_front_time="${_days}:${_hours}:${_min}:${_sec}"
 	;;
@@ -70,6 +70,13 @@ convert_to_time ()
 
 echo Starting accumulator...
 
+while [[ ! -e ${1} ]]
+do 
+	echo "Waiting for ${1} to become available"
+	sleep 1
+done
+
+
 # If the _acc file already exists
 if [[ -e ${1}_acc ]]
 then
@@ -82,8 +89,6 @@ then
 	_error_ms=$(convert_to_ms $_error_time)
 	echo UPDATE - Front $_front_time \| Back $_back_time \| Bottom $_bottom_time \| Error $_error_time
 	echo UPDATE - Front $_front_ms \| Back $_back_ms \| Bottom $_bottom_ms \| Error $_error_ms
-else
-	touch ${1}_acc
 fi
 
 cat $1 | while IFS=',' read -rA _line
@@ -106,7 +111,7 @@ cat $1 | while IFS=',' read -rA _line
 			else
 				# Bird is on both perches
 				_state=ERROR
-				echo "The bird was on both perches at time ${_line[1]}"
+				echo "$1 : The bird was on both perches at time ${_line[1]}"
 			fi
 
 	
@@ -117,7 +122,7 @@ cat $1 | while IFS=',' read -rA _line
 				# Bird is on front perch
 				_difference=$(./accumulator/time_diff $_last ${_line[1]})
 				_front_ms=$(( $_front_ms+$_difference ))
-				convert_to_time _front_ms front
+				convert_to_time front
 			elif [[ ${_line[2]} = 1 && ${_line[3]} = 0 ]]
 			then
 			 	# Bird is on back perch 
@@ -130,7 +135,7 @@ cat $1 | while IFS=',' read -rA _line
 			then
 				# Bird is on both perches
 				_state=ERROR
-				echo "The bird was on both perches at time ${_line[1]}"
+				echo "$1 : The bird was on both perches at time ${_line[1]}"
 			fi
 
 		elif [[ $_state = BACK ]]
@@ -144,7 +149,7 @@ cat $1 | while IFS=',' read -rA _line
 			 	# Bird is on back perch 
 				_difference=$(./accumulator/time_diff $_last ${_line[1]})
 				_back_ms=$(( $_back_ms+$_difference ))
-				convert_to_time _back_ms back
+				convert_to_time back
 			elif [[ ${_line[2]} = 1 && ${_line[3]} = 1 ]]
 			then
 				# Bird is not on a perch
@@ -153,7 +158,7 @@ cat $1 | while IFS=',' read -rA _line
 			then
 				# Bird is on both perches
 				_state=ERROR
-				echo "The bird was on both perches at time ${_line[1]}"
+				echo "$1 : The bird was on both perches at time ${_line[1]}"
 			fi
 		 
 		elif [[ $_state = BOTTOM ]]
@@ -171,11 +176,11 @@ cat $1 | while IFS=',' read -rA _line
 				# Bird is not on a perch
 				_difference=$(./accumulator/time_diff $_last ${_line[1]})
 				_bottom_ms=$(( $_bottom_ms+$_difference ))
-				convert_to_time _bottom_ms bottom
+				convert_to_time bottom
 			elif [[ ${_line[2]} = 0 && ${_line[3]} = 0 ]]
 			then
 				# Bird is on both perches
-				echo "The bird was on both perches at time ${_line[1]}"
+				echo "$1 : The bird was on both perches at time ${_line[1]}"
 				_state=ERROR
 			fi
 
@@ -199,8 +204,8 @@ cat $1 | while IFS=',' read -rA _line
 				# Bird is on both perches
 				_difference=$(./accumulator/time_diff $_last ${_line[1]})
 				_error_ms=$(( $_error_ms+$_difference ))
-				convert_to_time _error_ms error
-				echo "The bird was on both perches at time ${_line[1]}"
+				convert_to_time error
+				echo "$1 : The bird was on both perches at time ${_line[1]}"
 			fi
 		fi
 		

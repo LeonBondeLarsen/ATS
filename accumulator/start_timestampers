@@ -1,7 +1,6 @@
-#!/usr/bin/zsh
+#!/bin/bash
 set -m
 source global_settings
-_IFACE=eth0
 
 accumulator/timestamper $ATS_MONITOR01_PERCH_IP $_IFACE /tmp/m01 &
 PIDS[0]=$!
@@ -10,6 +9,7 @@ accumulator/timestamper $ATS_MONITOR02_PERCH_IP $_IFACE /tmp/m02 &
 PIDS[1]=$!
 
 #trap "kill -s -SIGINT $(jobs | awk '/[0-9]/ {gsub("\\[","%");gsub("\\]","");gsub("\\+","");gsub("\\-","");print $1}' | awk '{printf("%s ", $0)}' )" SIGINT
-trap "kill -SIGINT ${PIDS[@]}" SIGINT
-
+trap "kill -SIGINT ${PIDS[*]};sleep 2;rm /tmp/m01;rm /tmp/m02" SIGINT SIGTERM EXIT
+#trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+#trap "killall background" SIGINT SIGTERM EXIT
 wait

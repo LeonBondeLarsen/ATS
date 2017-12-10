@@ -4,6 +4,10 @@ _IFACE=$2
 _FIFO_NAME=$3
 
 # Create fifos
+if [[ -e ${_FIFO_NAME} ]] 
+then
+	rm ${_FIFO_NAME}
+fi
 mkfifo ${_FIFO_NAME}
 
 # Open fifos as RW to make sure they remain open

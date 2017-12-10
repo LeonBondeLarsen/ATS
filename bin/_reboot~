@@ -1,7 +1,0 @@
-#!/bin/bash
-
-send_tmux 'C-c'
-send_ssh 'sudo poweroff'
-
-
-

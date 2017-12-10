@@ -50,7 +50,7 @@ usage()
 send_ssh()
 # Execute command-line on remote machine via ssh
 {
-	run_command ssh -t -t ${_REMOTE_USER}@${_REMOTE_IP}%eth0 "$@"
+	run_command ssh -t -t ${_REMOTE_USER}@${_REMOTE_IP}%${_IFACE} "$@"
 }
 
 send_tmux()
@@ -124,7 +124,7 @@ _UNIT=$1
 source $_ATOS_PATH/global_settings
 
 if [ $_UNIT = 'all' ]; then
-	for _UNIT in $(avahi-browse -lart | $_ATOS_PATH/bin/avahi-list | cut -d'.' -f1); do 
+	for _UNIT in $(avahi-browse -lart | $_ATOS_PATH/bin/avahi-list _iface=$_IFACE | cut -d'.' -f1); do 
 		setup_and_execute
         done	       
 else

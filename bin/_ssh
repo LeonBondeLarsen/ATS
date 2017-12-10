@@ -1,4 +1,4 @@
 #!/bin/bash
 
-run_command ssh ${_REMOTE_USER}@${_REMOTE_IP}%eth0
+run_command ssh ${_REMOTE_USER}@${_REMOTE_IP}%${_IFACE}
 
