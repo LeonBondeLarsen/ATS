@@ -1,0 +1,5 @@
+#!/bin/zsh
+source /home/leon/Documents/scripts/ats/global_settings
+_VIDEO_CAPS="video/x-raw,width=800,height=480,framerate=$FRAME_RATE"
+
+gst-launch-1.0 -v udpsrc multicast-group=$ATS_BOX1_CAM_IP auto-multicast=true multicast-iface=$_IFACE ! $_VIDEO_CAPS ! videoconvert ! queue2 ! autovideosink sync=false 

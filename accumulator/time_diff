@@ -14,6 +14,14 @@ then
 else
 	START=$(ts_get_msec $start_ts)
 	STOP=$(ts_get_msec $stop_ts)
-	DIFF=$((STOP-START))
+
+    if [[ $START -lt $STOP ]]
+    then
+        DIFF=$((STOP-START))
+    else
+        # Time passed 00:00:00
+        DIFF=$(( (86400000-START) + STOP ))
+    fi 
+
 	echo $DIFF
 fi

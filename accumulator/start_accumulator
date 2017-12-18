@@ -1,19 +1,19 @@
 #!/bin/bash
 
-trap "kill -SIGINT ${PIDS[*]}" SIGINT SIGTERM EXIT
+trap "kill -SIGINT ${PIDS[*]}" SIGINT
 
 accumulator/start_timestampers &
 PIDS[0]=$!
 
 sleep 2
 
-accumulator/accumulator /tmp/m01 &
+accumulator/accumulator ${_REMOTE_WORKSPACE}m01 &
 PIDS[1]=$!
 
-accumulator/accumulator /tmp/m02 &
+accumulator/accumulator ${_REMOTE_WORKSPACE}m02 &
 PIDS[2]=$!
 
-DISPLAY=:0.0 exec i3-sensible-terminal xterm -e 'watch -d -t tail -n1 /tmp/m01_acc /tmp/m02_acc' 
+DISPLAY=:0.0 exec i3-sensible-terminal xterm -e "watch -d -t tail -n1 ${_REMOTE_WORKSPACE}m01_acc ${_REMOTE_WORKSPACE}m02_acc 2> /dev/null" 
 
 # my_func() {
 #  jobs > /tmp/dims

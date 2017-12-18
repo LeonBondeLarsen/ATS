@@ -1,12 +1,9 @@
 #!/bin/zsh
-_IFACE='labvpn'
+source /home/leon/Documents/scripts/ats/global_settings 
 _AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=44100, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=44100, channels=1, layout=interleaved'
-_IIB1_AUDIO='ff05::3'
-_IIB2_AUDIO='ff05::4'
-
 
 # Decode and mix as stereo (box1 in left and box2 in right)
 gst-launch-1.0 -v -m interleave name=mix ! autoaudiosink \
-	udpsrc multicast-group=$_IIB1_AUDIO multicast-iface=$_IFACE auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix. \
-	udpsrc multicast-group=$_IIB2_AUDIO multicast-iface=$_IFACE auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix.
+	udpsrc multicast-group=$ATS_BOX1_MIC_IP multicast-iface=$_IFACE auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix. \
+	udpsrc multicast-group=$ATS_BOX2_MIC_IP multicast-iface=$_IFACE auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix.
 

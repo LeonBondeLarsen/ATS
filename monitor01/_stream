@@ -19,7 +19,7 @@ PIDS[1]=$!
 while true;do sleep 60;python ~/bin/get_humidity.py;done | gst-launch-1.0 -e -v fdsrc ! "text/x-raw" ! udpsink host=$ATS_MONITOR01_HUMIDITY_IP auto-multicast=true &
 PIDS[2]=$!
 
-while true;do sleep 1;_p1=$(cat /sys/class/gpio/gpio17/value);_p2=$(cat /sys/class/gpio/gpio27/value);echo $_p1,$_p2;done | gst-launch-1.0 -e -v fdsrc ! "text/x-raw" ! udpsink host=$ATS_MONITOR01_PERCH_IP auto-multicast=true &
+while true;do sleep $SENSOR_UPDATE_PERIOD;_p1=$(cat /sys/class/gpio/gpio17/value);_p2=$(cat /sys/class/gpio/gpio27/value);echo $_p1,$_p2;done | gst-launch-1.0 -e -v fdsrc ! "text/x-raw" ! udpsink host=$ATS_MONITOR01_PERCH_IP auto-multicast=true &
 PIDS[3]=$!
 
 

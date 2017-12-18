@@ -1,4 +1,4 @@
-_REMOTE_USER='pi'
-_REMOTE_HOST='recorder'
-_REMOTE_WORKSPACE='/home/pi/'
+_REMOTE_USER='llarsen'
+_REMOTE_HOST='birdpc01'
+_REMOTE_WORKSPACE='/home/llarsen/'
 _STARTUP_SCRIPT='_record'

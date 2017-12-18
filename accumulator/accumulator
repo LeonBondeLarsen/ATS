@@ -1,24 +1,24 @@
 #!/usr/bin/zsh 
 _state=INIT  		# INIT,FRONT,BACK,BOTTOM,ERROR
 
-_front_ms=0
-_back_ms=0
-_bottom_ms=0
-_error_ms=0
+_front_ms=0.0
+_back_ms=0.0
+_bottom_ms=0.0
+_error_ms=0.0
 
-_front_time=0:00:00:00
-_back_time=0:00:00:00
-_bottom_time=0:00:00:00
-_error_time=0:00:00:00
+_front_time=0:00:00:00.000
+_back_time=0:00:00:00.000
+_bottom_time=0:00:00:00.000
+_error_time=0:00:00:00.000
 
-_last=0
-_difference=0
+_last=0.0
+_difference=0.0
 
 
 convert_to_ms()
 {
-  read -r d h m s <<< $(echo $1 | tr '.:' ' ' )
-  echo $(((d*24*60*60*1000)+(h*60*60*1000)+(m*60*1000)+(s*1000)))
+  read -r d h m s ms <<< $(echo $1 | tr '.:' ' ' )
+  echo $(((d*24*60*60*1000)+(h*60*60*1000)+(m*60*1000)+(s*1000)+(ms)))
 }
 
 convert_to_time ()
@@ -26,42 +26,42 @@ convert_to_time ()
 	_ms=_${1}_ms
 
 	# Calculate days
-	_days=$(($_ms/(24*60*60*1000)))
+    _days=$(printf "%u" $(($_ms/(24*60*60*1000))))
 	_ms=$(($_ms-($_days*24*60*60*1000)))
-	_days=$(printf "%d" $_days)
+	_days=$(printf "%u" $_days)
 
 	# Calculate hours
-	_hours=$(($_ms/(60*60*1000)))
+    _hours=$(printf "%u" $(($_ms/(60*60*1000))))
 	_ms=$(($_ms-($_hours*60*60*1000)))
-	_hours=$(printf "%02d" $_hours)
+	_hours=$(printf "%02u" $_hours)
 
 	# Calculate minutes
-	_min=$(($_ms/(60*1000)))
+    _min=$(printf "%u" $(($_ms/(60*1000))))
 	_ms=$(($_ms-($_min*60*1000)))
-	_min=$(printf "%02d" $_min)
+	_min=$(printf "%02u" $_min)
 
 	# Calculate seconds
-	_sec=$(($_ms/1000))
-	_ms=$(($_ms-($_sec*1000)))
-	_sec=$(printf "%02d" $_sec)
+    _sec=$(printf "%u" $(($_ms/1000)))
+    _ms=$(($_ms-($_sec*1000)))
+	_sec=$(printf "%02u" $_sec)
 
-	# Calculate milliseconds
-	_ms=$(printf "%03d" $_ms)
+	# Calculate tenths
+	_ms=$(printf "%03u" $_ms)
 
-	#echo "${_days}:${_hours}:${_min}:${_sec}"
+	#echo "${_days}:${_hours}:${_min}:${_sec}.${_ms}"
 
 	case $1 in
 	front)
-		_front_time="${_days}:${_hours}:${_min}:${_sec}"
+		_front_time="${_days}:${_hours}:${_min}:${_sec}.${_ms}"
 	;;
 	back)
-		_back_time="${_days}:${_hours}:${_min}:${_sec}"
+		_back_time="${_days}:${_hours}:${_min}:${_sec}.${_ms}"
 		;;
 	bottom)
-		_bottom_time="${_days}:${_hours}:${_min}:${_sec}"
+		_bottom_time="${_days}:${_hours}:${_min}:${_sec}.${_ms}"
 		;;
 	error)
-		_error_time="${_days}:${_hours}:${_min}:${_sec}"
+		_error_time="${_days}:${_hours}:${_min}:${_sec}.${_ms}"
 		;;
 	*)
 		;;
@@ -82,17 +82,21 @@ if [[ -e ${1}_acc ]]
 then
 	echo reading old values
 
-	tail -n1 ${1}_acc | tr -d '[:space:],[:alpha:]' | IFS='|'  read -r _front_time _back_time _bottom_time _error_time 
+	tail -n1 ${1}_acc | tr -d '[:space:],[:alpha:]' | IFS='|'  read -r _front_time _back_time _bottom_time 
+    #_error_time 
 	_front_ms=$(convert_to_ms $_front_time)
 	_back_ms=$(convert_to_ms $_back_time)
 	_bottom_ms=$(convert_to_ms $_bottom_time)
-	_error_ms=$(convert_to_ms $_error_time)
+#	_error_ms=$(convert_to_ms $_error_time)
 	echo UPDATE - Front $_front_time \| Back $_back_time \| Bottom $_bottom_time \| Error $_error_time
 	echo UPDATE - Front $_front_ms \| Back $_back_ms \| Bottom $_bottom_ms \| Error $_error_ms
+else
+    touch ${1}_acc
 fi
 
 cat $1 | while IFS=',' read -rA _line
 	do 
+
 #		echo Line is: ${_line[1]} and ${_line[2]} and ${_line[3]}	
 		if [[ $_state = INIT ]]
 		then
@@ -186,7 +190,7 @@ cat $1 | while IFS=',' read -rA _line
 
 
 		elif [[ $_state = ERROR ]]
-		then
+        then
 			if [[ ${_line[2]} = 0 && ${_line[3]} = 1 ]]
 			then
 				# Bird is on front perch
@@ -210,7 +214,7 @@ cat $1 | while IFS=',' read -rA _line
 		fi
 		
 		_last=$_line[1]
-		echo Front $_front_time \| Back $_back_time \| Bottom $_bottom_time \| Error $_error_time >>${1}_acc
+		echo FP $_front_time \| BP $_back_time \| BT $_bottom_time >${1}_acc
 	done 
 
 #watch -d -t tail -n1 m0{1,2}_acc 
