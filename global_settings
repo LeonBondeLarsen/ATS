@@ -1,4 +1,4 @@
-export _IFACE=birdvpn
+export _IFACE=eth0
 
 export ATS_BOX1_CAM_IP='ff05::1'
 export ATS_BOX2_CAM_IP='ff05::2'

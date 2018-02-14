@@ -2,14 +2,13 @@
 set -m
 source global_settings
 
-accumulator/timestamper $ATS_MONITOR01_PERCH_IP $_IFACE ${_REMOTE_WORKSPACE}m01 &
-PIDS[0]=$!
+if  [[ $(ps aux | grep timestamper | wc -l) -lt 4 ]]
+then
+    /home/pi/accumulator/timestamper $ATS_MONITOR01_PERCH_IP $_IFACE /home/pi/data/m01-$(date +%Y-%m-%d)_ts &
+    /home/pi/accumulator/timestamper $ATS_MONITOR02_PERCH_IP $_IFACE /home/pi/data/m02-$(date +%Y-%m-%d)_ts &
+fi
 
-accumulator/timestamper $ATS_MONITOR02_PERCH_IP $_IFACE ${_REMOTE_WORKSPACE}m02 &
-PIDS[1]=$!
+trap "exit" INT TERM
+trap "pkill -P $$" EXIT 
 
-#trap "kill -s -SIGINT $(jobs | awk '/[0-9]/ {gsub("\\[","%");gsub("\\]","");gsub("\\+","");gsub("\\-","");print $1}' | awk '{printf("%s ", $0)}' )" SIGINT
-trap "kill -SIGINT ${PIDS[*]};sleep 2;rm /tmp/m01;rm /tmp/m02" SIGINT
-#trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
-#trap "killall background" SIGINT SIGTERM EXIT
 wait

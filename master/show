@@ -3,5 +3,5 @@ source /home/leon/Documents/scripts/ats/global_settings
 _VIDEO_CAPS="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96, format=I420, framerate=$FRAME_RATE, width=800, height=480, interlace-mode=progressive, pixel-aspect-ratio=1/1"
 
 gst-launch-1.0 -v videomixer name=mixer sink_1::ypos=480 ! autovideosink sync=false \
-udpsrc multicast-group=$ATS_BOX1_CAM_IP auto-multicast=true multicast-iface=$_IFACE ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! mixer. \
-udpsrc multicast-group=$ATS_BOX2_CAM_IP auto-multicast=true multicast-iface=$_IFACE ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! mixer.
+udpsrc multicast-group=$ATS_BOX2_CAM_IP auto-multicast=true multicast-iface=$_IFACE ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! mixer. \
+udpsrc multicast-group=$ATS_BOX1_CAM_IP auto-multicast=true multicast-iface=$_IFACE ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! queue2 ! mixer.

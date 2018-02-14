@@ -1,4 +1,4 @@
 #!/bin/bash
 
-run_command ssh ${_REMOTE_USER}@${_REMOTE_IP}%${_IFACE}
+run_command ssh -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${_REMOTE_USER}@${_REMOTE_IP}
 

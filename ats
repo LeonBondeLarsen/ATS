@@ -50,7 +50,7 @@ usage()
 send_ssh()
 # Execute command-line on remote machine via ssh
 {
-	run_command ssh -t -t ${_REMOTE_USER}@${_REMOTE_IP}%${_IFACE} "$@"
+	run_command ssh -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t ${_REMOTE_USER}@${_REMOTE_IP} "$@"
 }
 
 send_tmux()

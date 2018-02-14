@@ -1,34 +1,16 @@
 #!/bin/bash
+trap "exit" INT TERM
+trap "pkill -P $$" EXIT 
 
-trap "kill -SIGINT ${PIDS[*]}" SIGINT
-
-accumulator/start_timestampers &
-PIDS[0]=$!
+/home/pi/accumulator/start_timestampers &
 
 sleep 2
 
-accumulator/accumulator ${_REMOTE_WORKSPACE}m01 &
-PIDS[1]=$!
-
-accumulator/accumulator ${_REMOTE_WORKSPACE}m02 &
-PIDS[2]=$!
-
-DISPLAY=:0.0 exec i3-sensible-terminal xterm -e "watch -d -t tail -n1 ${_REMOTE_WORKSPACE}m01_acc ${_REMOTE_WORKSPACE}m02_acc 2> /dev/null" 
-
-# my_func() {
-#  jobs > /tmp/dims
-#  cat /tmp/dims | grep -o '[0-9]\+'
-#  #jobs | grep -o '[0-9]\+' 
-#  #echo $jbs
-#  #kill -SIGINT $jbs
-#}
-
-#echo "kill -SIGINT $(jobs | awk -F'[][]' '{print "%"$2} END{printf "\n"} ' ORS=' ')"
-#trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
-#trap "killall background" SIGINT SIGTERM EXIT
-#trap "kill -SIGINT $(jobs | awk '/[0-9]/ {gsub("\\[","%");gsub("\\]","");gsub("\\+","");gsub("\\-","");print $1}' | awk '{printf("%s ", $0)}' )" SIGINT
-
-#watch -d -t tail -n1 /tmp/m0{1,2}_acc
+/home/pi/accumulator/accumulator /home/pi/data/m01-$(date +%Y-%m-%d)_ts m01 &
+/home/pi/accumulator/accumulator /home/pi/data/m02-$(date +%Y-%m-%d)_ts m02 &
+/home/pi/accumulator/join > $(date +%Y-%m-%d)_join &
 
 
+DISPLAY=:0.0 exec i3-sensible-terminal xterm -e "watch -d -t tail -n1 /home/pi/data/m01-$(date +%Y-%m-%d)_acc /home/pi/data/m02-$(date +%Y-%m-%d)_acc 2> /dev/null" &
 
+wait
