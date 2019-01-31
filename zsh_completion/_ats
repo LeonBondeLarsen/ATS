@@ -1,3 +1,4 @@
 #compdef ats
 
-_arguments "1: :(all recorder box1input box2input box12mic box1output box2output fitPC monitor01 monitor02 accumulator)" "2: :(net poweroff reboot ssh start stop)"
+_arguments "1: :(all recorder box1input box2input box12mic box1output box2output fitPC box1monitor box2monitor accumulator)" "2: :(net poweroff reboot ssh start stop)"
+

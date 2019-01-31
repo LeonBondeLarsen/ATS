@@ -1,0 +1,7 @@
+- name: Reboot the host 
+  shell: nohup bash -c "sleep 3 && shutdown -r now" &
+
+- name: Wait for the host to come back up 
+  wait_for_connection:
+     delay: 10
+     timeout: 30

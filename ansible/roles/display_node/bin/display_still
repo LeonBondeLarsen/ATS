@@ -1,0 +1,9 @@
+#!/bin/bash
+
+XAUTHORITY=$(cat /home/pi/.Xauthority) DISPLAY=:0.0 sudo -u pi eog -f --display=:0 /home/pi/Services/display_still_node/bin/still.jpg
+
+#export DISPLAY=localhost:0
+#export XAUTHORITY=$(cat /home/pi/.Xauthority)
+
+#sudo -u pi gst-launch-1.0 -v filesrc location=/home/pi/Services/display_still_node/bin/still.jpg ! decodebin ! imagefreeze ! autovideosink
+

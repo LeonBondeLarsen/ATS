@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "This is {{ service.name }} with some_parameter {{ service.parameters.some_parameter }}"
+
+wait

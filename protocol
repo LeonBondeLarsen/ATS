@@ -1,0 +1,123 @@
+The purpose of these experiments is to verify that the Scype for birds
+system can be used as a medium for communication between zebra finches.
+
+Husbandry
+The birds have access to food and fresh water ad libitum served either 
+at the bottom of the cage or from feeders at the side of the cage with 
+a small perch in front of them.  The birds are kept on a 12-12 
+day-night schedule, the temperature is kept between 22 and 28 degrees 
+celsius and the relative humidity between 50 and 60 percent.
+
+When not in experiment the birds are kept pairwise in breeding cages 
+next to aviaries containing hundreds of individuals. Under experiment 
+the birds are isolated for a maximum of ten days before returning to  
+their usual surroundings.
+
+Experimental setup
+The male and the female of an established breeding pair are moved to  
+seperate cages equipped with the system. The cages are placed in 
+isolator boxes that attenuate sound to a level below the hearing 
+threshold of zebra finches. Thus the birds have no way of communicating 
+visually or auditively except through the system.
+
+Procedure
+The first day the birds are left to get use to the new surroundings. On 
+day two the recording system is turned on and from day three the entire 
+system is turned on, but the speaker is silent and the screen is black. 
+From day 4 the system is active for two hours in the morning. The rest 
+of the time it is silent and black. In the female cage this both speaker 
+and display are turned on during the active window. In the male cage the 
+system setting follows cases A through F of the communication matrix 
+depicted below.
+
+The experiment is repeated with 8 pairs and the order of cases a through
+e are randomised. The drawn order is depicted in the experiment plan below.
+https://www.calculatorsoup.com/calculators/statistics/number-generator.php
+
+Communication matrix
+Day        1      2      3        4-8     4-8     4-8      4-8     4-8 
+Case                     A        B       C       D        E       F
+Perch      REC    REC    REC      REC     REC     REC      REC     REC
+Mic        REC    REC    REC      REC     REC     REC      REC     REC
+Camera     OFF    REC    REC      REC     REC     REC      REC     REC
+Speaker    OFF    OFF    SILENT   SILENT  SILENT  SOUND    SOUND   SOUND
+Display    OFF    OFF    BLACK    STILL   VIDEO   BLACK    STILL   VIDEO
+
+Experiment plan
+Day      3 4 5 6 7 8
+Pair 1   A B E F C D     Started 21/1-2019
+Pair 2   A B D F C E
+Pair 3   A E F C D B
+Pair 4   A E D C B F
+Pair 5   A C F E D B
+Pair 6   A C E B D F
+Pair 7   A B E C F D
+Pair 8   A C F B E D
+
+Measurements
+Events are generated from the perch sensors and from audio. A position 
+event is generated when the bird changes position between front perch, 
+back perch and not perched. A power event is generated when the power 
+of the audio signal within the 1-6kHz frequency band is larger than 20% 
+of the maximum power recorded. An entropy event is generated when the 
+entropy is below 10% of the minimum entropy recorded. A syllable event 
+is generetated when both power and entropy events are on at the same time.
+A song event is emitted when multiple syllable events are detected within
+a refraction period of 500ms and lasting at least 1000ms.
+
+Metrics
+We measure the percentage of time spend in the three different positions 
+during the active window. We also measure the number of song events during 
+the active window and the ratio of songs sung in front of the display 
+to the total number of songs. Finally we measure the temperature and relative 
+humidity in the boxes.
+
+When the male is on the front perch and the song event is active
+the data is manually reviewed for directed song. Directed song is defined
+as the male singing, dancing and/or beak whiping while the female is attentive.
+
+Controls
+The temperature on day two will be higher than on day one due to the
+camera being turned on and it will be even higher on day 3 when the entire 
+system is on. From day 3 on it is constant since the equipment stays on. Any 
+change in behaviour due to temperature will therefore happen during the first 
+three days and with day three as baseline any subsequent changes must be due 
+to factors other than temperature.
+
+Statistics
+ABC compared to DEF : Effect of sound compared to no sound
+AD compared to BE   : Effect of still image compared to no image
+BE compared to CF   : Effect of video compared to still image
+
+Protocol for swapping pairs:
+Pre:    Shut down camera and output boxes
+        Shut down event emitters
+Day 0:  Swap the birds
+        Register bird id's in perch sensor events (ansible, cage)
+Day 2:  Turn on camera and output boxes
+        Edit crontab on output boxes
+        Set volume for no feedback
+        Register bird id's in swarm configs
+        Start event emitters
+        Check thresholds
+        
+        Star
+
+
+Pair 1 
+  Bur nr. 5
+  Male: orange/purple 14/14
+  Female: blue/white 47/47
+  Longer period due to failed experiment
+  2019-01-25 : A
+  2019-01-26 : B
+  2019-01-27 : E
+  2019-01-28 : F
+  2019-01-29 : C
+  2019-01-30 : D
+
+
+
+
+
+

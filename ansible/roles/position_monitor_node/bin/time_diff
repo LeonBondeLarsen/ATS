@@ -1,0 +1,27 @@
+#!/usr/bin/zsh
+
+ts_get_msec()
+{
+  read -r h m s ms <<< $(echo $1 | tr '.:' ' ' )
+  echo $(((h*60*60*1000)+(m*60*1000)+(s*1000)+ms))
+}
+
+start_ts=$1
+stop_ts=$2
+if [[ $start_ts = $stop_ts ]] 
+then
+	echo "Time is going backwards!" >&2
+else
+	START=$(ts_get_msec $start_ts)
+	STOP=$(ts_get_msec $stop_ts)
+
+    if [[ $START -lt $STOP ]]
+    then
+        DIFF=$((STOP-START))
+    else
+        # Time passed 00:00:00
+        DIFF=$(( (86400000-START) + STOP ))
+    fi 
+
+	echo $DIFF
+fi

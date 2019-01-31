@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [[ ! -p $_directory/positions_fifo ]]; then
+    mkfifo $_directory/positions_fifo
+fi 
+
+gst-launch-1.0 -q udpsrc multicast-group=$_IP auto-multicast=true multicast-iface=$_IFACE ! 'text/x-raw' ! fdsink | while read line
+do
+    (
+    flock -e 200
+    echo $line | jq -c -s "{cage: $_CAGE, timestamp:\"$(date +%T.%3N)\"} + .[0]" > $_directory/positions_fifo
+    ) 200> $_directory/positions_fifo_lock
+done 
+

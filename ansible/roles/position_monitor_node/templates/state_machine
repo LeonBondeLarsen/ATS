@@ -1,0 +1,6 @@
+#!/bin/bash
+export data_directory={{ data_directory }}
+
+echo "Starting state machine"
+
+exec {{ remote_services_path }}/{{ node_name }}/bin/state_machine

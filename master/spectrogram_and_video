@@ -1,0 +1,18 @@
+#!/bin/zsh
+#source /home/leon/Documents/scripts/ats/global_settings
+_VIDEO_CAPS="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96, format=I444, framerate=60/1, interlace-mode=progressive, pixel-aspect-ratio=1/1"
+
+#IP=ff15::b8:27:eb:88:e8:f5
+#IP=ff15::b8:27:eb:99:41:c9
+
+#gst-launch-1.0 -v udpsrc multicast-group=ff15::2 auto-multicast=true multicast-iface=eth0 ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videobalance brightness=0.0 contrast=1.0 hue=0.0 saturation=1.0 !  videoconvert ! queue2 ! fpsdisplaysink
+
+#ATS_BOX1_CAM_IP="ff15::1"
+#ATS_BOX2_CAM_IP="ff15::2"
+
+_IFACE=eth0
+_PORT=6004
+
+gst-launch-1.0 -v videomixer name=mixer sink_1::xpos=1280 ! autovideosink sync=false \
+udpsrc multicast-group=ff15::1 auto-multicast=true multicast-iface=$_IFACE port=$_PORT ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videobalance brightness=0.1 contrast=1.0 hue=0.0 saturation=1.0 ! videoconvert ! queue2 ! mixer. \
+udpsrc multicast-group=ff15::2 auto-multicast=true multicast-iface=$_IFACE port=$_PORT ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videobalance brightness=0.1 contrast=1.0 hue=0.0 saturation=1.0 ! videoconvert ! queue2 ! mixer.

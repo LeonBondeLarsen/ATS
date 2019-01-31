@@ -1,0 +1,14 @@
+#!/bin/bash
+set -m
+source global_settings
+
+if  [[ $(ps aux | grep timestamper | wc -l) -lt 4 ]]
+then
+    /home/pi/accumulator/timestamper $ATS_MONITOR01_PERCH_IP $_IFACE /home/pi/data/m01-$(date +%Y-%m-%d)_ts &
+    /home/pi/accumulator/timestamper $ATS_MONITOR02_PERCH_IP $_IFACE /home/pi/data/m02-$(date +%Y-%m-%d)_ts &
+fi
+
+trap "exit" INT TERM
+trap "pkill -P $$" EXIT 
+
+wait

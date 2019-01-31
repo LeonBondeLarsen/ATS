@@ -1,0 +1,123 @@
+#!/bin/bash
+state_file=${data_directory}/current_state_file #is appended by cage number
+input_file=${data_directory}/positions_fifo 
+input_file_lock=${data_directory}/positions_file_lock
+output_file=${data_directory}/state_change_file
+
+if [[ ! -e $state_file1 ]]
+then
+    touch ${state_file}1 
+fi 
+
+if [[ ! -e $state_file2 ]]
+then
+    touch ${state_file}2 
+fi 
+
+if [[ ! -e $output_file ]]
+then
+    touch $output_file
+fi 
+
+function get_value_from_json ()
+{ 
+    key=$1
+    json=$2
+    value=$(echo $json | awk -F, -v RS='[{}]' "{s=\"\"; for(i=1;i<=NF;i++)if(\$i~/^\"($key)\":/)s=(s?s OFS:\"\") \$i; if(s)print s}" | cut -d":" -f2 | sed -e 's/^ *//g' -e 's/ *$//g')
+    echo $value 
+}
+
+function get_position_from_json ()
+{
+    #front=$(echo $1 | jq .front)
+    #back=$(echo $1 | jq .back)
+    front=$(get_value_from_json front $1)
+    back=$(get_value_from_json back $1)
+
+    if [ $front = "1" ]
+    then
+
+        if [ $back = "1" ]
+        then
+            echo ERROR
+        else
+            echo FRONT
+        fi
+
+    else 
+
+        if [ $back = "1" ]
+        then
+            echo BACK 
+        else
+            echo BOTTOM
+        fi
+
+    fi 
+
+}
+while true
+do
+    #    inotifywait -q -e close_write $input_file |
+        #        while read -r filename event 
+    #        do
+    # line=$(flock $input_file_lock head -n1 $input_file && sed -i '1d' $input_file)
+
+    if read line < $input_file
+    then
+        position=$(get_position_from_json $line)
+        cage=$(get_value_from_json cage $line)
+        timestamp=$(get_value_from_json timestamp $line)
+        #cage=$(echo $line | jq .cage)
+        state=$(cat $state_file$cage) 
+        #timestamp=$(echo $line | jq .timestamp)
+
+        case $state in 
+            INIT)       
+                echo "initial state"
+
+                echo "{\"timestamp\":$timestamp, \"cage\":$cage, \"from\":\"$state\", \"to\":\"$position\" }"
+                echo $position > $state_file$cage 
+                ;;
+
+            FRONT) 
+                if [ $position != FRONT ] 
+                then
+                    echo "{\"timestamp\":$timestamp, \"cage\":$cage, \"from\":\"$state\", \"to\":\"$position\" }"
+                    echo $position > $state_file$cage 
+                fi
+                ;;
+
+            BACK) 
+                if [ $position != BACK ] 
+                then
+                    echo "{\"timestamp\":$timestamp, \"cage\":$cage, \"from\":\"$state\", \"to\":\"$position\" }"
+                    echo $position > $state_file$cage 
+                fi 
+                ;;
+
+            BOTTOM) 
+                if [ $position != BOTTOM ] 
+                then
+                    echo "{\"timestamp\":$timestamp, \"cage\":$cage, \"from\":\"$state\", \"to\":\"$position\" }"
+                    echo $position > $state_file$cage 
+                fi 
+                ;;
+
+            ERROR) 
+                if [ $position != ERROR ] 
+                then
+                    echo "{\"timestamp\":$timestamp, \"cage\":$cage, \"from\":\"$state\", \"to\":\"$position\" }"
+                    echo $position > $state_file$cage 
+                fi 
+                ;;
+
+            *)
+                echo "invalid state '$(cat $state_file$cage)'. Returning to 'init'"
+                echo "INIT" > $state_file$cage
+                ;;
+
+            esac
+            #    done
+        fi
+    done >> $output_file

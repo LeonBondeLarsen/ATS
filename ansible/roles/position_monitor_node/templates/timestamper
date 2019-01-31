@@ -1,0 +1,9 @@
+#!/bin/bash
+export _CAGE={{ service.cage  }}
+export _IP={{ service.multicast_group }}
+export _IFACE=eth0 
+export _directory={{ data_directory }}
+
+echo "Starting timestamper listening to $_IP on $_IFACE and saving to $_directory/positions_file"
+
+exec {{ remote_services_path }}/{{ node_name }}/bin/timestamper

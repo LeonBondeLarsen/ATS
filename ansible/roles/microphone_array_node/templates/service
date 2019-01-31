@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export _SR=48000
+export _BUFFER=4194304
+export _MG_CH1={{ channel1.multicast_group }}
+export _MG_CH2={{ channel2.multicast_group }}
+
+exec ../bin/stream_sound 

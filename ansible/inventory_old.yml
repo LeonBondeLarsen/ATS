@@ -1,0 +1,44 @@
+[all:vars]
+ansible_port=22
+ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+ansible_become=true
+
+[historian-boxes]
+historian-box ansible_host=192.168.10.217
+
+[historian-boxes:vars]
+ansible_user=deploy
+
+[camera_boxes]
+cage1-camera-box  ansible_host=cage1-camera-box.local multicast_group="ff15::1"
+cage2-camera-box  ansible_host=cage2-camera-box.local multicast_group="ff15::2"
+
+[camera_boxes:vars]
+ansible_user=pi
+
+[output_boxes]
+cage1-output-box  ansible_host=cage1-output-box.local display_multicast_group="ff15::2" speaker_multicast_group="ff15::4" speaker_volume="2.0" 
+cage2-output-box  ansible_host=cage2-output-box.local display_multicast_group="ff15::1" speaker_multicast_group="ff15::3" speaker_volume="2.0"
+
+[output_boxes:vars]
+ansible_user=pi
+
+[sensor_boxes]
+cage1-sensor-box  ansible_host=cage1-sensor-box.local multicast_group="ff15::8" 
+cage2-sensor-box  ansible_host=cage2-sensor-box.local multicast_group="ff15::13"
+
+[sensor_boxes:vars]
+ansible_user=pi
+
+[position_monitor_boxes]
+position-monitor-box ansible_host=position-monitor-box.local run_scripts='["timestamper","accumulator"]'
+
+[position_monitor_boxes:vars]
+ansible_user=pi
+
+[microphone_array_boxes]
+microphone-array-box ansible_host=microphone-array-box.local multicast_group1="ff15::3" multicast_group2="ff15::4"
+
+[microphone_array_boxes:vars]
+ansible_user=pi
+

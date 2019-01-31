@@ -1,0 +1,16 @@
+- name: Removing old symlinks 
+  file:
+    state: "{{ item }}"
+    path: "{{ svscan_src }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0700
+  with_items:
+    - absent
+    - directory 
+
+- name: Deleting old service directory structure
+  file:
+    state: absent
+    path: "{{ service_dir }}"
+

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Get parameters from ansible playbook
+_DIR={{ record_location }}
+_IF={{ record_interface }}
+_SECS={{ rotate_seconds }}
+_USER={{ user }}
+echo "Starts dumping traffic on interface: $_IF to $_DIR"
+exec tcpdump -i $_IF -Q in -w $_DIR/%H:%M:%S -G $_SECS -Z $_USER

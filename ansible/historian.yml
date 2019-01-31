@@ -1,0 +1,12 @@
+- hosts: birdpc01
+  tags:
+    - tcpdump
+  roles:
+    - role: historian_node
+      vars:
+        node_name: "historian00" # Name of the node
+        record_location: "/tmp/files/" # Where to save recordings from tcpdump to
+        record_interface: "camnet" # Interface to record from
+        rotate_seconds: 60 # Rotate tcpdump files every x seconds
+        user: "deploy" # User to save tcpdump files as
+        interface: "camnet" # Interface to run autoasker

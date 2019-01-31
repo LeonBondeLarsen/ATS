@@ -1,0 +1,28 @@
+#!/usr/bin/zsh
+
+send_ssh()
+# Execute command-line on remote machine via ssh
+{
+    ssh -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t newcastle "$@"
+}
+
+send_tmux()
+# Execute command-line on remote machine in tmux startup-session 
+{
+    send_ssh "tmux send-keys -t playback:0.0 $@" 
+}
+
+print 'Starting playback'
+send_tmux 'playback' 'Space' "$@" 'Enter' 
+sleep 1
+print 'Starting recording'
+#/home/leon/Documents/scripts/ats/master/dump_audio_and_video"$@" &
+#/home/leon/Documents/scripts/ats/master/dump_audio "$@" &
+/home/leon/Documents/scripts/ats/master/dump_one_cage "$@" &
+TASK_PID=$!
+sleep 60
+kill -15 $TASK_PID
+
+wait $TASK_PID
+
+print 'done'

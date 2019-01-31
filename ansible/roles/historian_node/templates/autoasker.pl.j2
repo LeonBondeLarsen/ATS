@@ -1,0 +1,49 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+
+use IO::Socket::IP -register;
+use Net::DNS;
+
+my $debug = 0;
+
+my $dport = 5353;
+my $sport = 5351;
+my $daddr = "ff02::fb";
+my $iface = "{{ interface }}";
+my $saddr = "";
+
+my $cmd = "ip -6 a s dev $iface";
+my @lines = `$cmd`;
+my ($ip) = map { /(fe80::.*?)\// } @lines;
+$saddr = $ip."\%".$iface;
+print "Using saddr: $saddr\n" if $debug;
+# Create PTR IN record. Ask (politely) the network about who's there
+my $PTRQueryPak = new Net::DNS::Packet("_rtp._udp.local", "PTR", "IN");
+my $ptrdata = $PTRQueryPak->data;
+
+my $sock = IO::Socket->new(
+	Proto => "UDP",
+	Domain    => PF_INET6,
+	PeerHost => $daddr,
+	PeerPort => $dport,
+	LocalPort => $sport,
+	LocalAddr => $saddr
+) or die "Cannot create socket - $@\n";
+
+print "Client socket created, sending packet...\n" if $debug;
+$sock ->send($ptrdata);
+print "Packet sent\n" if $debug;
+
+$sock->close();
+print "Client socket closed\n" if $debug;
+
+my $sockListen = IO::Socket->new(
+	Domain    => PF_INET6,
+	LocalPort => $sport,
+	Proto => "UDP"
+) or die "Cannot create socket - $@\n";
+
+print "Server socket created... Waiting 5 seconds for clients to send their response\n" if $debug;
+sleep 5;
+print "Close server socket...\n" if $debug;

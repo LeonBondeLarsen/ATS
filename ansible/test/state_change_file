@@ -1,0 +1,17 @@
+invalid state ''. Returning to 'init'
+invalid state 'INIT'. Returning to 'init'
+invalid state 'INIT'. Returning to 'init'
+invalid state 'INIT'. Returning to 'init'
+invalid state 'INIT'. Returning to 'init'
+invalid state 'INIT'. Returning to 'init'
+invalid state 'INIT'. Returning to 'init'
+invalid state 'INIT'. Returning to 'init'
+invalid state 'INIT'. Returning to 'init'
+invalid state 'INIT'. Returning to 'init'
+
+invalid state 'INIT'. Returning to 'init'
+INIT
+initial state
+{"timestamp":""10:20:02.460"", "cage":2, "from":"INIT", "to":"FRONT" }
+{"timestamp":""10:20:02.460"", "cage":2, "from":"FRONT", "to":"BOTTOM" }
+{"timestamp":""10:20:02.460"", "cage":2, "from":"BOTTOM", "to":"BACK" }

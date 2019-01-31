@@ -1,0 +1,6 @@
+#!/bin/bash
+export _VOLUME={{ volume }}
+export MG_IP={{ multicast_group }}
+export _AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=44100, channels=1, layout=interleaved'
+
+exec ../bin/speaker 

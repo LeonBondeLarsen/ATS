@@ -1,0 +1,16 @@
+#!/bin/zsh
+
+send_ssh()
+# Execute command-line on remote machine via ssh
+{
+    ssh -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t newcastle "$@"
+}
+
+send_tmux()
+# Execute command-line on remote machine in tmux startup-session 
+{
+    send_ssh "tmux send-keys -t playback:0.0 $@" 
+}
+
+send_tmux 'playback' 'Space' "$@" 'Enter' 
+sleep 60

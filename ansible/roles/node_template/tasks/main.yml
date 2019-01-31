@@ -1,0 +1,22 @@
+#  
+# Node
+#
+
+- name: Configure node 
+  include_role:
+    name: base_node 
+  vars:
+      node_name: "node"
+      node_description: "Template node"
+      remote_services_path: "/home/pi/Services"
+      local_bin_path: bin
+      services: 
+      - name: "serviceA"
+        template: templates/service
+        parameters: 
+          some_parameter: "some value"
+          pre_up_script: "up"
+      - name: "serviceB"
+        template: templates/service
+        parameters:
+          some_parameter: "some value"

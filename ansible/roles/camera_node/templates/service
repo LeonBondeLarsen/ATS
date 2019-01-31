@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Get parameters from ansible playbook
+export WIDTH={{ width }}
+export HEIGHT={{ height }}
+export FRAMERATE={{ frame_rate }}
+export MG_IP={{ multicast_group }}
+
+echo "Multicast group: $MG_IP"
+
+exec ../bin/stream_from_camera 

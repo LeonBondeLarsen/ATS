@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# Handle arguments
+if [[ $# < 1 ]]
+then
+    echo "Missing argument"
+    exit 0
+elif [[ $# < 2 ]]
+then
+    echo "One argument given. Defaults to all hosts"
+    host_input='all'
+    playbook_input=$1
+elif [[ $# < 3 ]]
+then
+    echo "Two arguments given."
+    host_input=$1
+    playbook_input=$2
+else
+    echo "Too many arguments."
+    exit 0
+fi
+
+# Handle missing file extension
+filename=$(basename "$playbook_input")
+extension="${filename##*.}"
+filename="${filename%.*}"
+if [[ $extension == $filename ]]
+then
+    echo "Adding file extension"
+    extension='yml'
+fi 
+playbook=$filename.$extension
+echo "Using playbook: $playbook"
+
+# Check for existance of the file
+directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+if [[ ! -e $directory/$playbook ]]
+then
+    echo "The playbook $directory/$playbook does not exist"
+    exit 0
+fi 
+echo "The playbook $directory/$playbook exist"
+
+# Infer hosts
+if [[ $host_input == 'all' ]] 
+then
+    hosts_in_playbook=$(grep -e '- hosts:' $directory/$playbook | cut -d':' -f2 | uniq)
+    echo "Running $playbook_input on all hosts"
+    hosts=$hosts_in_playbook
+else
+    hosts=$host_input
+    echo "Running $playbook_input on $hosts"
+fi 
+
+# Make log directory
+mkdir -p /tmp/ansible
+
+# Start threads
+for host in ${hosts[@]}
+do
+    unbuffer ansible-playbook $directory/$playbook --limit=$host 2>&1 > /tmp/ansible/$host &
+done
+
+# Wait for all threads to finish
+wait
+
+# Print log to terminal
+for host in ${hosts[@]}
+do
+    cat /tmp/ansible/$host 
+done

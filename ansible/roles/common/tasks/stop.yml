@@ -1,0 +1,6 @@
+- name: Stop service 
+  svc:
+    name: "{{  inventory_hostname }}"
+    state: stopped
+    service_dir: /home/pi/Services
+

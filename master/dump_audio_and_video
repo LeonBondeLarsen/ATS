@@ -1,0 +1,16 @@
+#!/bin/zsh
+_VIDEO_CAPS="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96, format=I444, framerate=60/1, interlace-mode=progressive, pixel-aspect-ratio=1/1"
+_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=48000, channels=1, layout=interleaved'
+
+_IFACE=eth0
+_PORT=6004
+
+gst-launch-1.0 -e -q matroskamux name=va_mux ! queue2 ! filesink location="$@".mp4 \
+    videomixer name=v_mux sink_1::xpos=1280 ! queue2 ! va_mux. \
+        udpsrc multicast-group=ff15::1 auto-multicast=true multicast-iface=$_IFACE port=$_PORT ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videobalance brightness=0.1 contrast=1.0 hue=0.0 saturation=1.0 ! videoconvert ! queue2 ! v_mux. \
+        udpsrc multicast-group=ff15::2 auto-multicast=true multicast-iface=$_IFACE port=$_PORT ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videobalance brightness=0.1 contrast=1.0 hue=0.0 saturation=1.0 ! videoconvert ! queue2 ! v_mux. \
+    interleave name=a_mux ! queue2 ! va_mux. \
+	    udpsrc multicast-group=ff15::11 multicast-iface=$_IFACE port=$_PORT auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! a_mux. \
+	    udpsrc multicast-group=ff15::12 multicast-iface=$_IFACE port=$_PORT auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! a_mux.
+
+

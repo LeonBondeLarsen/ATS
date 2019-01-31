@@ -1,0 +1,19 @@
+#!/usr/bin/zsh
+
+sudo svc -d /etc/service/speaker
+sudo svc -d /etc/service/display_black
+sudo svc -d /etc/service/display_still
+sudo svc -d /etc/service/display_video
+rm /home/pi/Services/speaker/speaker/down
+rm /home/pi/Services/speaker/speaker/up
+rm /home/pi/Services/display_black_node/display_black/down
+rm /home/pi/Services/display_still_node/display_still/down
+rm /home/pi/Services/display_video_node/display_video/down
+rm /home/pi/Services/display_black_node/display_black/up
+rm /home/pi/Services/display_still_node/display_still/up
+rm /home/pi/Services/display_video_node/display_video/up
+sudo pkill gst-launch
+
+touch /home/pi/Services/display_black_node/display_black/down
+touch /home/pi/Services/display_still_node/display_still/down
+touch /home/pi/Services/display_video_node/display_video/down

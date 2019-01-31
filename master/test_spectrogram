@@ -1,0 +1,3 @@
+#!/bin/bash
+
+gst-launch-1.0 -v filesrc location=/home/leon/spec_test/zf.wav ! wavparse ! audioconvert ! spectrogramscope colormap=1 ! videoconvert ! 'video/x-raw, width=800, height=200, framerate=30/1'  ! autovideosink

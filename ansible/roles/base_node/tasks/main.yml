@@ -1,0 +1,66 @@
+
+- name: Configure daemontools
+  include_role:
+    name: daemontools
+  vars:
+      instances:
+        - svscan_service_name: "{{ service.name }}"
+          local_service_dir: "{{ remote_services_path }}/{{ node_name }}"
+  with_items: 
+    - "{{ services }}"
+  loop_control:
+    loop_var: service 
+
+- name: Creating directory structure for service 
+  file: 
+    path: "{{ remote_services_path }}/{{ node_name }}/{{ service.name }}" 
+    state: directory
+    mode: 0700
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  with_items: 
+    - "{{ services }}"
+  loop_control:
+    loop_var: service  
+
+- name: Copy node's run script
+  template:
+    src: "{{ service.template }}"
+    dest: "{{ remote_services_path }}/{{ node_name }}/{{ service.name }}/do_run"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0700
+  with_items: 
+    - "{{ services }}"
+  loop_control:
+    loop_var: service  
+
+- name: Creating directory structure for {{ node_name }}/bin
+  file: 
+    path: "{{ remote_services_path }}/{{ node_name }}/bin" 
+    state: directory
+    mode: 0700
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  with_items: 
+    - "{{ services }}"
+  loop_control:
+    loop_var: service  
+
+- name: Copy bin folder
+  copy:
+    src: "{{ file }}"
+    dest: "{{ remote_services_path }}/{{ node_name }}/bin/{{ file | basename }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0700
+  with_fileglob:
+    - "{{ local_bin_path }}/*"
+  loop_control:
+    loop_var: file 
+
+- name: "Create Avahi service"
+  include_role:
+    name: avahi_service
+  vars:
+    description: "{{ node_description }}"

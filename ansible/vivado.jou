@@ -1,0 +1,17 @@
+#-----------------------------------------------------------
+# Vivado v2017.3 (64-bit)
+# SW Build 2018833 on Wed Oct  4 19:58:07 MDT 2017
+# IP Build 2016188 on Wed Oct  4 21:52:56 MDT 2017
+# Start of session at: Wed Apr 18 14:17:32 2018
+# Process ID: 11602
+# Current directory: /home/leon/Documents/scripts/ats/ansible
+# Command line: vivado
+# Log file: /home/leon/Documents/scripts/ats/ansible/vivado.log
+# Journal file: /home/leon/Documents/scripts/ats/ansible/vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project /home/leon/Documents/vivado_projects/zybo_peripherals/zybo_peripherals.xpr
+update_compile_order -fileset sources_1
+launch_sdk -workspace /home/leon/Documents/vivado_projects/zybo_peripherals/zybo_peripherals.sdk -hwspec /home/leon/Documents/vivado_projects/zybo_peripherals/zybo_peripherals.sdk/zybo_wrapper.hdf
+open_bd_design {/home/leon/Documents/vivado_projects/zybo_peripherals/zybo_peripherals.srcs/sources_1/bd/zybo/zybo.bd}
+write_bd_layout -format pdf -orientation landscape /home/leon/Desktop/zybo_peripherals.pdf

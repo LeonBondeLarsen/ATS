@@ -1,0 +1,10 @@
+---
+# tasks file for avahi_service
+- name: Add service to avahi
+  template: src=service.service.j2 dest=/etc/avahi/services/service.service
+
+# Example action to restart service httpd, in all cases
+- name: "Restart avahi"
+  service:
+    name: avahi-daemon
+    state: restarted

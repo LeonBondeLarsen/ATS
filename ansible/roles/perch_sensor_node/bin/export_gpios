@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Setup GPIOs
+echo 17 &> /dev/null > /sys/class/gpio/export
+sleep 2
+echo in &> /dev/null > /sys/class/gpio/gpio17/direction
+
+echo 27 &> /dev/null > /sys/class/gpio/export
+sleep 2
+echo in &> /dev/null > /sys/class/gpio/gpio27/direction

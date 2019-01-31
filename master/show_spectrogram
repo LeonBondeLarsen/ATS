@@ -1,0 +1,3 @@
+#!/bin/bash
+
+gst-launch-1.0 udpsrc multicast-group=ff15::11 multicast-iface=eth0 port=5004 auto-multicast=true caps='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=48000, channels=1, layout=interleaved' ! rtpL16depay ! audioconvert ! spectrogramscope colormap=1 ! videoconvert ! autovideosink

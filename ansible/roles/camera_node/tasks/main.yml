@@ -1,0 +1,15 @@
+#  
+# Node
+#
+
+- name: Configure node
+  include_role:
+    name: base_node
+  vars:
+      node_name: "camera_node"
+      node_description: "Strems input from camera"
+      remote_services_path: "/home/pi/Services"
+      local_bin_path: bin
+      services:
+      - name: "camera"
+        template: templates/service

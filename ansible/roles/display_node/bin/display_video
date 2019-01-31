@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "Display node shows stream from $MG_IP with brightness: $_brightness,contrast: $_contrast, hue: $_hue and saturation: $_saturation"
+
+gst-launch-1.0 -v -e udpsrc multicast-group=$MG_IP auto-multicast=true ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! omxh264dec ! videobalance brightness=$_brightness contrast=$_contrast hue=$_hue saturation=$_saturation ! videoconvert ! videoflip method=$_flip ! autovideosink sync=true
+

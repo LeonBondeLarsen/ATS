@@ -1,0 +1,102 @@
+#!/usr/bin/zsh
+
+function set_speaker_silent()
+{
+    touch /home/pi/Services/speaker_node/speaker/down
+}
+
+function set_speaker_sound()
+{
+    sudo svc -u /etc/service/speaker
+    touch /home/pi/Services/speaker_node/speaker/up
+}
+
+function set_display_black()
+{
+    sudo svc -u /etc/service/display_black
+    touch /home/pi/Services/display_black_node/display_black/up
+    touch /home/pi/Services/display_still_node/display_still/down
+    touch /home/pi/Services/display_video_node/display_video/down
+}
+
+function set_display_still()
+{
+    sudo svc -u /etc/service/display_still
+    touch /home/pi/Services/display_black_node/display_black/down
+    touch /home/pi/Services/display_still_node/display_still/up
+    touch /home/pi/Services/display_video_node/display_video/down
+}
+
+function set_display_video()
+{
+    sudo svc -u /etc/service/display_video
+    touch /home/pi/Services/display_black_node/display_black/down
+    touch /home/pi/Services/display_still_node/display_still/down
+    touch /home/pi/Services/display_video_node/display_video/up
+}
+
+function reset()
+{
+    sudo svc -d /etc/service/speaker
+    sudo svc -d /etc/service/display_black
+    sudo svc -d /etc/service/display_still
+    sudo svc -d /etc/service/display_video
+    rm /home/pi/Services/speaker_node/speaker/down
+    rm /home/pi/Services/speaker_node/speaker/up
+    rm /home/pi/Services/display_black_node/display_black/down
+    rm /home/pi/Services/display_still_node/display_still/down
+    rm /home/pi/Services/display_video_node/display_video/down
+    rm /home/pi/Services/display_black_node/display_black/up
+    rm /home/pi/Services/display_still_node/display_still/up
+    rm /home/pi/Services/display_video_node/display_video/up
+    sudo pkill display_
+    sudo pkill speaker_
+    sudo pkill gst-launch
+    sudo pkill eog
+}
+
+_state=$1
+
+if [[ "$_state" == "A" ]]
+then
+    print "State A: Speaker silent. Display black"
+    reset
+    set_speaker_silent
+    set_display_black
+
+elif [[ "$_state" == "B" ]]
+then
+    print "State B: Speaker silent. Display still"
+    reset
+    set_speaker_silent
+    set_display_still
+
+elif [[ "$_state" == "C" ]]
+then
+    print "State C: Speaker silent. Display video"
+    reset
+    set_speaker_silent
+    set_display_video
+
+elif [[ "$_state" == "D" ]]
+then
+    reset
+    set_speaker_sound
+    set_display_black
+
+elif [[ "$_state" == "E" ]]
+then
+    reset
+    set_speaker_sound
+    set_display_still
+
+elif [[ "$_state" == "F" ]]
+then
+    reset
+    set_speaker_sound
+    set_display_video    
+
+else
+    print "$_state is not a valid state"
+fi
+

@@ -1,0 +1,69 @@
+#!/usr/bin/perl
+
+use Net::DBus;
+use Net::DBus::Reactor;
+use JSON::Parse 'parse_json';
+use IO::Socket::Multicast6;
+
+use Data::Dumper;
+
+# Flush output buffer
+$| = 1;
+
+my $debug = 1;
+my $interface="{{ record_interface }}";
+print "autojoiner is starting up on $interface\n";
+
+# create a new IPv6 UDP socket ready to read datagrams on port 1100
+my $s = IO::Socket::Multicast6->new(Domain=>AF_INET6) || die "Failed to create multicast socket: $!";
+
+# Avahi is on the system bus (Found using d-feet)
+my $bus = Net::DBus->system;
+
+# Get a handle to avahi
+my $handle = $bus->get_service("org.freedesktop.Avahi");
+
+# Get avahi object
+my $avahi_obj = $handle->get_object("/", "org.freedesktop.Avahi.Server");
+
+# Method is called when services are removed
+sub remove_service{
+        my ($interface, $protocol, $name, $stype, $domain, $flags) = @_;
+        print "Remove: Interface: $interface, Protocol: $protocol, name: $name, stype: $stype, domain: $domain, flags: $flags\n" if $debug;
+}
+
+# Following methos is called when new services appear
+sub new_service{
+        my ($interface, $protocol, $name, $stype, $domain, $flags) = @_;
+        print "Add: Interface: $interface, Protocol: $protocol, name: $name, stype: $stype, domain: $domain, flags: $flags\n" if $debug;
+
+        # Resolv service to get txt record
+        my ($interface,$domain, $host, $aprotocol, $address,$port, my ($protocol, $ip, $port,@txt), $flags) = $avahi_obj->ResolveService($interface,$protocol,$name,$stype, $domain, 1 ,0);
+
+        # Convert txt-byte-array to string
+        my $txt_record_json = join("",map {chr($_)} @{$txt[0][0]});
+
+        # Parse json txt-record
+        my $txt_record = parse_json($txt_record_json);
+        print Dumper $txt_record if $debug;
+
+	my $group = $txt_record->{'topic'};
+	print "Joining topic: $group\n" if $debug;
+
+	# Add an IPv6 multicast group
+	$s->mcast_add($group,$interface)|| die "Couldn't set group: $!\n";
+}
+
+
+# Interface, protocol, service, domain, flags
+my $client_obj_name = $avahi_obj->ServiceBrowserNew(-1, 1, '_rtp._udp', 'local', 0);
+my $client_obj = $handle->get_object($client_obj_name,"");
+$client_obj->connect_to_signal("ItemNew", \&new_service);
+$client_obj->connect_to_signal("ItemRemove", \&remove_service);
+
+
+# and we start the main loop where the events are processed
+my $reactor = Net::DBus::Reactor->main();
+$reactor->run();
+exit(0);
+

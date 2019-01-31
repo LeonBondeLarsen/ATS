@@ -4,5 +4,5 @@ send_tmux 'C-c'
 send_tmux 'Enter'
 
 # Make sure the startup session exists TODO: Find a way to test
-send_ssh "tmux new-session -d -s startup"
+#send_ssh "tmux new-session -d -s startup"
 

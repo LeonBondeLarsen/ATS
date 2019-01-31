@@ -1,0 +1,164 @@
+# multicast group convention:
+#   prefix ff15::
+#   video 1-9
+#   audio 11-19
+#   events 20
+
+- hosts: cage1-camera-box
+  roles:
+  - role: camera_node
+    vars:
+      multicast_group: "ff15::1"
+      id: 1
+      type: "video"
+      height: "720"
+      width: "1280"
+      frame_rate: "60/1"
+
+- hosts: cage2-camera-box
+  roles:
+  - role: camera_node
+    vars:  
+      multicast_group: "ff15::2"
+      id: 2
+      type: "video"
+      height: "720"
+      width: "1280"
+      frame_rate: "60/1"
+ 
+# The output boxes have multiple nodes running on them
+- hosts: leon-office-monitor-box
+  roles: 
+  - role: display_node
+    vars:
+      multicast_group: "ff15::2"
+      id: 0
+      type: "video output"
+      display: ":0.0"
+      brightness: "0.2"
+      contrast: "1.0"
+      hue: "0.0"
+      saturation: "1.0"
+      flip: "rotate-180"
+
+- hosts: cage1-output-box
+  roles: 
+  - role: display_node
+    vars:
+      multicast_group: "ff15::2"
+      id: 0
+      type: "video output"
+      display: ":0.0"
+      brightness: "0.2"
+      contrast: "1.0"
+      hue: "0.0"
+      saturation: "1.0"
+      flip: "rotate-180"
+
+- hosts: cage1-output-box
+  roles: 
+  - role: speaker_node
+    vars:
+      multicast_group: "ff15::12"
+      id: 0
+      type: "audio output"
+      volume: "2.0"
+
+- hosts: ats-test
+  roles: 
+  - role: display_node
+    vars:
+      multicast_group: "ff15::2"
+      id: 0
+      type: "video output"
+      display: ":0.0"
+      brightness: "0.2"
+      contrast: "1.0"
+      hue: "0.0"
+      saturation: "1.0"
+      flip: "rotate-180"
+
+- hosts: ats-test
+  roles: 
+  - role: speaker_node
+    vars:
+      multicast_group: "ff15::12"
+      id: 0
+      type: "audio output"
+      volume: "2.0"
+
+- hosts: cage2-output-box
+  roles:
+  - role: display_node
+    vars:
+      multicast_group: "ff15::1"
+      id: 0
+      type: "video output"
+      display: ":0.0"
+      brightness: "0.2"
+      contrast: "1.0"
+      hue: "0.0"
+      saturation: "1.0"
+      flip: "rotate-180"
+
+- hosts: cage2-output-box
+  roles:
+  - role: speaker_node
+    vars:
+      multicast_group: "ff15::11"
+      id: 0
+      type: "audio output"
+      volume: "2.0"
+
+- hosts: cage1-sensor-box
+  roles:
+  - role: perch_sensor_node
+    vars:  
+      cage: 1
+      multicast_group: "ff15::20"
+      id: 1
+      type: "events"
+      sensor_poll_period: "0.2"
+      front_gpio_path: "/sys/class/gpio/gpio27/value"
+      back_gpio_path: "/sys/class/gpio/gpio17/value"
+
+- hosts: cage2-sensor-box
+  roles:
+  - role: perch_sensor_node
+    vars:  
+      cage: 2
+      multicast_group: "ff15::20"
+      id: 2
+      type: "events"
+      sensor_poll_period: "0.2"
+      front_gpio_path: "/sys/class/gpio/gpio17/value"
+      back_gpio_path: "/sys/class/gpio/gpio27/value"
+
+# The position-monitor node concists of multiple services 
+- hosts: position-monitor-box
+  roles:
+  - role: position_monitor_node
+    vars:
+      data_directory: "/home/pi/data"
+      cage1_timestamper:
+        cage: "1"
+        multicast_group: "ff15::12"
+        save_path: "/home/pi/data/"
+      cage2_timestamper:
+        cage: "2"
+        multicast_group: "ff15::22"
+        save_path: "/home/pi/data/"
+      
+
+- hosts: microphone-array-box  
+  roles:
+  - role: microphone_array_node
+    vars:
+      multicast_group: "ff15::12"
+      type: "audio"
+      id: 12
+      channel1:
+        multicast_group: "ff15::11"
+      channel2:
+        multicast_group: "ff15::12"
+

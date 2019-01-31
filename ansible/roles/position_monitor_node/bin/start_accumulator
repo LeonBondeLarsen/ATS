@@ -1,0 +1,16 @@
+#!/bin/bash
+trap "exit" INT TERM
+trap "pkill -P $$" EXIT 
+
+/home/pi/accumulator/start_timestampers &
+
+sleep 2
+
+/home/pi/accumulator/accumulator /home/pi/data/m01-$(date +%Y-%m-%d)_ts m01 &
+/home/pi/accumulator/accumulator /home/pi/data/m02-$(date +%Y-%m-%d)_ts m02 &
+/home/pi/accumulator/join > $(date +%Y-%m-%d)_join &
+
+
+DISPLAY=:0.0 exec i3-sensible-terminal xterm -e "watch -d -t tail -n1 /home/pi/data/m01-$(date +%Y-%m-%d)_acc /home/pi/data/m02-$(date +%Y-%m-%d)_acc 2> /dev/null" &
+
+wait

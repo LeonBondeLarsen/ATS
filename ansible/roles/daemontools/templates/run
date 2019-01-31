@@ -1,0 +1,16 @@
+#!/bin/bash
+DIR=$(pwd);
+PATH={{ remote_services_path }}/{{ node_name }}/bin:$PATH
+
+{% if service.pre_up_script is defined %}
+if [[  -e ../bin/{{ service.pre_up_script }} ]] 
+then
+    echo "Running pre_up script {{  service.pre_up_script }}"
+    ../bin/{{ service.pre_up_script  }}
+fi
+{% endif %}
+
+echo "Starting node from: $DIR";
+
+exec 2>&1
+exec "${DIR}/do_run";

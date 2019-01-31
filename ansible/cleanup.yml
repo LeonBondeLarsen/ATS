@@ -1,0 +1,7 @@
+- hosts: all
+  tasks:
+      - name: cleanup node
+        include_role:
+            name: common
+            tasks_from: cleanup 
+

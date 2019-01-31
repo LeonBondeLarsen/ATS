@@ -1,0 +1,18 @@
+#!/usr/bin/zsh
+
+exec 3< /home/pi/data/m01-$(date +%Y-%m-%d)_ts
+exec 4< /home/pi/data/m02-$(date +%Y-%m-%d)_ts
+
+while true
+do
+    IFS=','
+    read -u3 -rA _line1
+    read -u4 -rA _line2
+
+if [[ ${_line1[3]} = 0 &&  ${_line2[3]} = 0 ]]
+    then
+        echo ${_line1[1]}
+    fi
+    sleep 0.5
+done
+

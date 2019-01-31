@@ -1,0 +1,11 @@
+<?xml version="1.0" standalone='no'?>
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+	<name replace-wildcards="no">{{ description }}</name>
+  <service>
+    <type>_rtp._udp</type>
+    <port>5004</port>
+    <txt-record>{"topic":"{{ multicast_group }}","id":{{ id }},"type":"{{ type }}"}</txt-record>
+  </service>
+</service-group>
+

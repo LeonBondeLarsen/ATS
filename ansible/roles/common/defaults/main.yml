@@ -1,0 +1,2 @@
+svscan_src: "/etc/service"
+service_dir: "/home/pi/Services"

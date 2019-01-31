@@ -1,0 +1,16 @@
+#  
+# Node
+#
+
+- name: Configure node
+  include_role:
+    name: base_node
+  vars:
+      node_name: "microphone_array_node"
+      node_description: "Streams audio from multi channel microphone array"
+      remote_services_path: "/home/pi/Services"
+      local_bin_path: bin
+      services:
+      - name: "stream_audio"
+        template: templates/service
+        pre_up_script: "set_gains"

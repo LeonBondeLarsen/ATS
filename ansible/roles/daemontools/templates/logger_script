@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec multilog t n50 s1048576 ./main

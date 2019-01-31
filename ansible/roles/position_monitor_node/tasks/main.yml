@@ -1,0 +1,29 @@
+- name: Configure node 
+  include_role:
+    name: base_node 
+  vars:
+      node_name: "position_monitor_node"
+      node_description: "position monitor node"
+      remote_services_path: "/home/pi/Services"
+      local_bin_path: bin
+      services: 
+      - name: "cage1_timestamper"
+        template: templates/timestamper
+        pre_up_script: "up"
+        cage: "{{ cage1_timestamper.cage }}"
+        multicast_group: "{{ cage1_timestamper.multicast_group }}"
+        save_path: "{{ cage1_timestamper.save_path }}"
+      - name: "cage2_timestamper"
+        template: templates/timestamper
+        pre_up_script: "up"
+        cage: "{{ cage2_timestamper.cage }}"
+        multicast_group: "{{ cage2_timestamper.multicast_group }}"
+        save_path: "{{ cage2_timestamper.save_path }}"
+      - name: "state_machine"
+        template: templates/state_machine
+      
+- name: Reboot box 
+  include_role:
+    name: common
+    tasks_from: reboot
+

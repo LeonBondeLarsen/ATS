@@ -1,0 +1,47 @@
+---
+all:
+  vars:
+    ansible_port: "22"
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile='/dev/null'"
+    ansible_become: "true"
+    ansible_user: "pi"
+
+  children:
+
+    camera_boxes:
+      hosts:
+        cage1-camera-box:  
+          ansible_host: "cage1-camera-box.local"
+
+        cage2-camera-box:  
+          ansible_host: "cage2-camera-box.local"
+
+    output_boxes: 
+      hosts:
+        cage1-output-box:  
+          ansible_host: "cage1-output-box.local" 
+
+        cage2-output-box:  
+          ansible_host: "cage2-output-box.local"
+        
+    sensor_boxes:
+      hosts:
+        cage1-sensor-box:  
+          ansible_host: "cage1-sensor-box.local"
+        cage2-sensor-box:  
+          ansible_host: "cage2-sensor-box.local"
+
+  hosts: 
+    position-monitor-box: 
+      ansible_host: "position-monitor-box.local"
+
+    microphone-array-box: 
+      ansible_host: "microphone-array-box.local"
+
+    birdpc01:
+      ansible_user: "llarsen"
+      ansible_host: "birdpc01.local"
+
+    leon-office-monitor-box:
+      ansible_host: "leon-office-monitor-box.local"
+  

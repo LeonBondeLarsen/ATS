@@ -1,0 +1,46 @@
+---
+- name: Installing daemontools
+  apt: pkg=daemontools-run state=present
+  tags:
+    - packages
+
+- name: Creating directory structure for service
+  file:
+    path: "{{ item.local_service_dir }}/{{ item.svscan_service_name }}/log/main"
+    state: directory
+    mode: 0700
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  with_items: "{{ instances }}"
+
+- name: Copying the log script
+  template: 
+    src: logger_script 
+    dest: "{{ item.local_service_dir}}/{{ item.svscan_service_name }}/log/run" 
+    owner: "{{ ansible_user }}" 
+    group: "{{ ansible_user }}" 
+    mode: 0700
+  with_items: "{{ instances }}"
+
+- name: Copying the run script
+  template: 
+    src: run 
+    dest: "{{ item.local_service_dir}}/{{ item.svscan_service_name }}/run" 
+    owner: "{{ ansible_user }}" 
+    group: "{{ ansible_user }}" 
+    mode: 0700
+  with_items: "{{ instances }}"
+
+- name: Creating symlink from local service directory to svscan's service directory
+  file:
+    src:  "{{ item.local_service_dir }}/{{ item.svscan_service_name }}"
+    dest: "{{ svscan_src }}/{{ item.svscan_service_name }}"
+    state: link
+  with_items: "{{ instances }}"
+
+- name: "(Re)start node"
+  svc:
+    name: "{{ item.svscan_service_name }}"
+    service_dir: "{{ svscan_src }}"
+    state: restarted
+  with_items: "{{ instances }}"

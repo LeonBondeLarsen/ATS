@@ -1,0 +1,6 @@
+---
+# defaults file for node_cam
+
+node_path: "/home/{{ ansible_user  }}/Services"
+node_name: "unnamed_node"
+run_script_path: "{{ node_path }}/{{ node_name }}/do_run"

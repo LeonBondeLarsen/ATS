@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+_term() { 
+  echo "Caught SIGTERM - killing children" 
+  kill -TERM $_VIDEO_PID 2>/dev/null
+  kill -TERM $_AUDIO_PID 2>/dev/null 
+}
+
+trap _term SIGTERM SIGINT
+
+_VIDEO_CAPS="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96, format=I444, framerate=60/1, interlace-mode=progressive, pixel-aspect-ratio=1/1"
+_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=48000, channels=1, layout=interleaved'
+
+_IFACE=eth0
+_PORT=6004
+
+gst-launch-1.0 -q videomixer name=mixer sink_1::xpos=1280 ! autovideosink sync=false \
+udpsrc multicast-group=ff15::1 auto-multicast=true multicast-iface=$_IFACE port=$_PORT ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videobalance brightness=0.1 contrast=1.0 hue=0.0 saturation=1.0 ! videoconvert ! queue2 ! mixer. \
+udpsrc multicast-group=ff15::2 auto-multicast=true multicast-iface=$_IFACE port=$_PORT ! $_VIDEO_CAPS ! rtph264depay ! h264parse ! avdec_h264 ! videobalance brightness=0.1 contrast=1.0 hue=0.0 saturation=1.0 ! videoconvert ! queue2 ! mixer. &
+_VIDEO_PID=$!
+
+gst-launch-1.0 -q interleave name=mix ! autoaudiosink \
+	udpsrc multicast-group=ff15::11 multicast-iface=$_IFACE port=$_PORT auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix. \
+	udpsrc multicast-group=ff15::12 multicast-iface=$_IFACE port=$_PORT auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix. &
+_AUDIO_PID=$!
+
+wait $_VIDEO_PID
+wait $_AUDIO_PID
+
+
+

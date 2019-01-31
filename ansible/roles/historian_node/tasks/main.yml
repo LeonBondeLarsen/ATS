@@ -1,0 +1,100 @@
+---
+# tasks file for node_historian
+- name: Configure daemontools for tcpdumper
+  include_role:
+    name: daemontools
+  vars:
+    instances:
+      - svscan_service_name: "{{ node_name }}"
+        local_service_dir: "{{ node_path }}"
+      - svscan_service_name: "autojoiner"
+        local_service_dir: "{{ node_path }}"
+      - svscan_service_name: "autoasker"
+        local_service_dir: "{{ node_path }}"
+      - svscan_service_name: "janus"
+        local_service_dir: "{{ node_path }}"
+  tags:
+    - janus
+
+- name: Copy tcpdump's run script
+  template:
+    src: tcpdump.sh.j2
+    dest: "{{ run_script_path }}"
+    mode: "0707"
+    owner: "deploy"
+    group: "deploy"
+
+- name: Copy autojoiner's run script
+  template:
+    src: autojoiner.pl.j2
+    dest: "{{ node_path }}/autojoiner/do_run"
+    mode: "0707"
+    owner: "deploy"
+    group: "deploy"
+
+- name: Copy autoasker to host
+  template:
+    src: autoasker.pl.j2
+    dest: "{{ node_path }}/autoasker/do_run"
+    mode: "0707"
+    owner: "deploy"
+    group: "deploy"
+  tags:
+    - autoasker
+    - janus
+
+- name: Copy janus to host
+  template:
+    src: janus.sh.j2
+    dest: "{{ node_path }}/janus/do_run"
+    mode: "0707"
+    owner: "deploy"
+    group: "deploy"
+  tags:
+    - janus
+
+
+#- name: Add cpan dependencies
+#  cpanm:
+#    name: " {{ item }} "
+#  with_items:
+#    - IO::Socket::IP
+#    - Net::Interface
+#  tags:
+#    - autoasker
+
+
+- name: Install perl dependencies from repo
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libnet-dns-perl
+  tags:
+    - autoasker
+
+- name: Create 'down' to make autoasker stay down
+  copy:
+    content: ""
+    dest: "{{ node_path }}/autoasker/down"
+    group: "deploy"
+    owner: "deploy"
+    mode:  "0777"
+  tags:
+    - autoasker
+- name: Stop autoasker
+  svc:
+    name: autoasker
+    service_dir: "{{ node_path }}"
+    state: stopped
+  tags:
+    - autoasker
+
+- name: Add entry to crontab that asks avahi about services
+  cron:
+    name: "Ask avahi services on network"
+    job: "sleep 30  && svc -o {{ node_path }}/autoasker/"
+    user: "root"
+  tags:
+    - autoasker
+

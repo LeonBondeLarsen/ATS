@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/zsh -x
 # 
 # Script for communicating with the ATOS system
 # Author Leon Bonde Larsen <leon@bondelarsen.dk>

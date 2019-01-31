@@ -1,12 +1,12 @@
 #!/bin/zsh
-source /home/leon/Documents/scripts/ats/global_settings 
-_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=44100, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=44100, channels=1, layout=interleaved'
+_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=48000, channels=1, layout=interleaved'
 
-# Decode and mix as stereo (box1 in left and box2 in right)
-#gst-launch-1.0 -v -m udpsrc multicast-group=$ATS_BOX2_MIC_IP multicast-iface=$_IFACE auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! interleave name=mix ! autoaudiosink 
+_IFACE=labvpn
+_PORT=5004
 
 # Decode and mix as stereo (box1 in left and box2 in right)
 gst-launch-1.0 -v -m interleave name=mix ! autoaudiosink \
-	udpsrc multicast-group=$ATS_BOX2_MIC_IP multicast-iface=$_IFACE auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix. \
-	udpsrc multicast-group=$ATS_BOX1_MIC_IP multicast-iface=$_IFACE auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix.
+	udpsrc multicast-group=ff15::11 multicast-iface=$_IFACE port=$_PORT auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix. \
+	udpsrc multicast-group=ff15::12 multicast-iface=$_IFACE port=$_PORT auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix.
+
 

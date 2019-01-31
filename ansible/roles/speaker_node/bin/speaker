@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "Speaker plays from $MG_IP at volume $_VOLUME"«»
+
+gst-launch-1.0 -e udpsrc multicast-group=$MG_IP multicast-iface='eth0' auto-multicast=true ! $_AUDIO_CAPS ! rtpL16depay ! audioconvert ! volume volume=$_VOLUME ! alsasink device="hw:0,0"
+
