@@ -1,0 +1,28 @@
+# ansible_user is defined in inventory
+
+- name: "Creating directory structure for {{ ansible_user }}/bin"
+  file:
+    path: "/home/{{ ansible_user }}/bin"
+    state: directory
+    mode: 0700
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: "Copy files to bin"
+  copy:
+    src: "{{ file }}"
+    dest: "/home/{{ ansible_user }}/bin/{{ file | basename }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0700
+  with_fileglob:
+    - "bin/*"
+  loop_control:
+    loop_var: file 
+
+- name: "Setup cron to run scripts named startup.sh under services at reboot"
+  cron:
+    name: "Run startup script at reboot"
+    special_time: reboot
+    job: "/home/{{ ansible_user }}/bin/run_startups.sh"
+    user: "{{ ansible_user }}"

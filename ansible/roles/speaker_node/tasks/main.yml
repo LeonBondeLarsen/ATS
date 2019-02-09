@@ -13,4 +13,3 @@
       services:
       - name: "speaker"
         template: templates/service
-        pre_up_script: "set_speaker"

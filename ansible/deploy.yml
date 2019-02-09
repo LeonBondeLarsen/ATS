@@ -41,19 +41,19 @@
       saturation: "1.0"
       flip: "rotate-180"
 
-- hosts: cage1-output-box
-  roles: 
-  - role: display_node
-    vars:
-      multicast_group: "ff15::2"
-      id: 0
-      type: "video output"
-      display: ":0.0"
-      brightness: "0.2"
-      contrast: "1.0"
-      hue: "0.0"
-      saturation: "1.0"
-      flip: "rotate-180"
+      #- hosts: cage1-output-box
+      #  roles: 
+      #  - role: display_node
+      #    vars:
+      #      multicast_group: "ff15::2"
+      #      id: 0
+      #      type: "video output"
+      #      display: ":0.0"
+      #      brightness: "0.2"
+      #      contrast: "1.0"
+      #      hue: "0.0"
+      #      saturation: "1.0"
+      #      flip: "rotate-180"
 
 - hosts: cage1-output-box
   roles: 
@@ -62,7 +62,7 @@
       multicast_group: "ff15::12"
       id: 0
       type: "audio output"
-      volume: "2.0"
+      volume: "1.0"
 
 - hosts: ats-test
   roles: 
@@ -85,21 +85,21 @@
       multicast_group: "ff15::12"
       id: 0
       type: "audio output"
-      volume: "2.0"
+      volume: "1.0"
 
-- hosts: cage2-output-box
-  roles:
-  - role: display_node
-    vars:
-      multicast_group: "ff15::1"
-      id: 0
-      type: "video output"
-      display: ":0.0"
-      brightness: "0.2"
-      contrast: "1.0"
-      hue: "0.0"
-      saturation: "1.0"
-      flip: "rotate-180"
+      #- hosts: cage2-output-box
+      #  roles:
+      #  - role: display_node
+      #    vars:
+      #      multicast_group: "ff15::1"
+      #      id: 0
+      #      type: "video output"
+      #      display: ":0.0"
+      #      brightness: "0.2"
+      #      contrast: "1.0"
+      #      hue: "0.0"
+      #      saturation: "1.0"
+      #      flip: "rotate-180"
 
 - hosts: cage2-output-box
   roles:
@@ -134,21 +134,31 @@
       front_gpio_path: "/sys/class/gpio/gpio17/value"
       back_gpio_path: "/sys/class/gpio/gpio27/value"
 
-# The position-monitor node concists of multiple services 
-- hosts: position-monitor-box
+
+- hosts: cage1-sensor-box
   roles:
-  - role: position_monitor_node
-    vars:
-      data_directory: "/home/pi/data"
-      cage1_timestamper:
-        cage: "1"
-        multicast_group: "ff15::12"
-        save_path: "/home/pi/data/"
-      cage2_timestamper:
-        cage: "2"
-        multicast_group: "ff15::22"
-        save_path: "/home/pi/data/"
-      
+  - role: temperature_node
+    vars:  
+      id: 1
+      type: "events"
+      multicast_group: "ff15::20"
+      kafka_servers: "manna,hou,bisnap"
+      kafka_topic: "ats_service"
+      identifier: "cage_1"
+      output_period: 60.0
+
+- hosts: cage2-sensor-box
+  roles:
+  - role: temperature_node
+    vars:  
+      id: 2
+      type: "events"
+      multicast_group: "ff15::20"
+      kafka_servers: "manna,hou,bisnap"
+      kafka_topic: "ats_service"
+      identifier: "cage_2"
+      output_period: 60.0
+
 
 - hosts: microphone-array-box  
   roles:

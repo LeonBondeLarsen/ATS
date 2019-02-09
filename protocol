@@ -45,7 +45,7 @@ Display    OFF    OFF    BLACK    STILL   VIDEO   BLACK    STILL   VIDEO
 
 Experiment plan
 Day      3 4 5 6 7 8
-Pair 1   A B E F C D     Started 21/1-2019
+Pair 1   A B E F C D
 Pair 2   A B D F C E
 Pair 3   A E F C D B
 Pair 4   A E D C B F
@@ -108,7 +108,7 @@ Pair 1
   Bur nr. 5
   Male: orange/purple 14/14
   Female: blue/white 47/47
-  Longer period due to failed experiment
+  Started 2019-01-21, restarted due to failure
   2019-01-25 : A
   2019-01-26 : B
   2019-01-27 : E
@@ -116,8 +116,60 @@ Pair 1
   2019-01-29 : C
   2019-01-30 : D
 
+Pair 2
+  Bur nr. 6
+
+  Day 0: 2019-02-01
+  Day 1: 2019-02-02 Turned on at 16.00
+  
+  2019-02-03 : A
+  2019-02-04 : B
+  2019-02-05 : D Turned on event emitters
+  2019-02-06 : F
+  2019-02-07 : C
+  2019-02-08 : E
 
 
+Crontabs:
+
+############################### Pair 1 ###############################
+
+00 09 25 1 * /home/pi/Services/display_video_node/bin/start_services A
+00 11 25 1 * /home/pi/Services/display_video_node/bin/start_services A
+
+00 09 26 1 * /home/pi/Services/display_video_node/bin/start_services B
+00 11 26 1 * /home/pi/Services/display_video_node/bin/start_services A
+
+00 09 27 1 * /home/pi/Services/display_video_node/bin/start_services E
+00 11 27 1 * /home/pi/Services/display_video_node/bin/start_services A
+
+00 09 28 1 * /home/pi/Services/display_video_node/bin/start_services F
+00 11 28 1 * /home/pi/Services/display_video_node/bin/start_services A
+
+00 09 29 1 * /home/pi/Services/display_video_node/bin/start_services C
+00 11 29 1 * /home/pi/Services/display_video_node/bin/start_services A
+
+00 09 30 1 * /home/pi/Services/display_video_node/bin/start_services D
+00 11 30 1 * /home/pi/Services/display_video_node/bin/start_services A
 
 
+############################### Pair 2 ###############################
+
+00 09 03 02 * /home/pi/Services/display_video_node/bin/start_services A
+00 11 03 02 * /home/pi/Services/display_video_node/bin/start_services A
+
+00 09 04 02 * /home/pi/Services/display_video_node/bin/start_services B
+00 11 04 02 * /home/pi/Services/display_video_node/bin/start_services A
+
+00 09 05 02 * /home/pi/Services/display_video_node/bin/start_services D
+00 11 05 02 * /home/pi/Services/display_video_node/bin/start_services A
+
+00 09 06 02 * /home/pi/Services/display_video_node/bin/start_services F
+00 11 06 02 * /home/pi/Services/display_video_node/bin/start_services A
+
+00 09 07 02 * /home/pi/Services/display_video_node/bin/start_services C
+00 11 07 02 * /home/pi/Services/display_video_node/bin/start_services A
+
+00 09 08 02 * /home/pi/Services/display_video_node/bin/start_services E
+00 11 08 02 * /home/pi/Services/display_video_node/bin/start_services A
 

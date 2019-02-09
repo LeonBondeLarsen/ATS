@@ -11,7 +11,7 @@
   loop_control:
     loop_var: service 
 
-- name: Creating directory structure for service 
+- name: "Creating directory structure for service" 
   file: 
     path: "{{ remote_services_path }}/{{ node_name }}/{{ service.name }}" 
     state: directory
@@ -23,7 +23,7 @@
   loop_control:
     loop_var: service  
 
-- name: Copy node's run script
+- name: "Copy node's run script"
   template:
     src: "{{ service.template }}"
     dest: "{{ remote_services_path }}/{{ node_name }}/{{ service.name }}/do_run"
@@ -35,7 +35,7 @@
   loop_control:
     loop_var: service  
 
-- name: Creating directory structure for {{ node_name }}/bin
+- name: "Creating directory structure for {{ node_name }}/bin"
   file: 
     path: "{{ remote_services_path }}/{{ node_name }}/bin" 
     state: directory
@@ -47,7 +47,7 @@
   loop_control:
     loop_var: service  
 
-- name: Copy bin folder
+- name: "Copy the nodes' bin folder"
   copy:
     src: "{{ file }}"
     dest: "{{ remote_services_path }}/{{ node_name }}/bin/{{ file | basename }}"

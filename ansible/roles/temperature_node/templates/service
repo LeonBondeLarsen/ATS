@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export _kafka_servers={{ kafka_servers }}
+export _kafka_topic={{ kafka_topic }}
+export _identifier={{ identifier }}
+export _output_period={{ output_period }}
+
+exec {{ remote_services_path }}/{{ node_name }}/bin/event_emitter.py 
