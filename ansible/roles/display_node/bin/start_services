@@ -14,25 +14,25 @@ function set_speaker_sound()
 function set_display_black()
 {
     sudo svc -u /etc/service/display_black
-    touch /home/pi/Services/display_black_node/display_black/up
-    touch /home/pi/Services/display_still_node/display_still/down
-    touch /home/pi/Services/display_video_node/display_video/down
+    touch /home/pi/Services/display_node/display_black/up
+    touch /home/pi/Services/display_node/display_still/down
+    touch /home/pi/Services/display_node/display_video/down
 }
 
 function set_display_still()
 {
     sudo svc -u /etc/service/display_still
-    touch /home/pi/Services/display_black_node/display_black/down
-    touch /home/pi/Services/display_still_node/display_still/up
-    touch /home/pi/Services/display_video_node/display_video/down
+    touch /home/pi/Services/display_node/display_black/down
+    touch /home/pi/Services/display_node/display_still/up
+    touch /home/pi/Services/display_node/display_video/down
 }
 
 function set_display_video()
 {
     sudo svc -u /etc/service/display_video
-    touch /home/pi/Services/display_black_node/display_black/down
-    touch /home/pi/Services/display_still_node/display_still/down
-    touch /home/pi/Services/display_video_node/display_video/up
+    touch /home/pi/Services/display_node/display_black/down
+    touch /home/pi/Services/display_node/display_still/down
+    touch /home/pi/Services/display_node/display_video/up
 }
 
 function reset()
@@ -43,12 +43,12 @@ function reset()
     sudo svc -d /etc/service/display_video
     rm /home/pi/Services/speaker_node/speaker/down
     rm /home/pi/Services/speaker_node/speaker/up
-    rm /home/pi/Services/display_black_node/display_black/down
-    rm /home/pi/Services/display_still_node/display_still/down
-    rm /home/pi/Services/display_video_node/display_video/down
-    rm /home/pi/Services/display_black_node/display_black/up
-    rm /home/pi/Services/display_still_node/display_still/up
-    rm /home/pi/Services/display_video_node/display_video/up
+    rm /home/pi/Services/display_node/display_black/down
+    rm /home/pi/Services/display_node/display_still/down
+    rm /home/pi/Services/display_node/display_video/down
+    rm /home/pi/Services/display_node/display_black/up
+    rm /home/pi/Services/display_node/display_still/up
+    rm /home/pi/Services/display_node/display_video/up
     sudo pkill display_
     sudo pkill speaker_
     sudo pkill gst-launch
@@ -80,18 +80,21 @@ then
 
 elif [[ "$_state" == "D" ]]
 then
+    print "State D: Speaker on. Display black"
     reset
     set_speaker_sound
     set_display_black
 
 elif [[ "$_state" == "E" ]]
 then
+    print "State E: Speaker on. Display still"
     reset
     set_speaker_sound
     set_display_still
 
 elif [[ "$_state" == "F" ]]
 then
+    print "State F: Speaker on. Display video"
     reset
     set_speaker_sound
     set_display_video    

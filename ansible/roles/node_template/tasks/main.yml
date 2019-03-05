@@ -20,3 +20,10 @@
         template: templates/service
         parameters:
           some_parameter: "some value"
+
+# include if node produces data streams to a topic
+- name: "Create Avahi service"
+  include_role:
+    name: avahi_service
+  vars:
+    description: "{{ node_description }}"

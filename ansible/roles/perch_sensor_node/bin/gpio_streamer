@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # ../bin/position_monitor.py $FRONT_GPIO_PATH $BACK_GPIO_PATH $SENSOR_POLL_PERIOD $CAGE | gst-launch-1.0 -e -v fdsrc ! 'text/x-raw' ! udpsink host=$MG_IP auto-multicast=true 
-../bin/position_monitor.py $FRONT_GPIO_PATH $BACK_GPIO_PATH $SENSOR_POLL_PERIOD $CAGE | kafkacat -b manna,hou,bisnap -t perch_sensor
+../bin/position_monitor.py $FRONT_GPIO_PATH $BACK_GPIO_PATH $SENSOR_POLL_PERIOD $CAGE | kafkacat -b manna,hou,bisnap -t ats_perch

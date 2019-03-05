@@ -1,0 +1,22 @@
+- hosts: all
+  tasks:
+    - name: remove ntp
+      apt: name=ntp state=absent
+
+    - name: enable service ntp and ensure it is not masked
+      systemd:
+        name: ntp
+        enabled: no
+        masked: no
+      when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "16")
+  roles:
+    - role: chrony
+      vars: 
+      chrony_server: 'fd5d:beef:beef:beef::1 iburst minpoll 8'
+      when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "16")
+
+    - role: chrony
+      vars: 
+      chrony_server: 'fd5d:beef:beef:beef::1 minpoll 8'
+      when: (ansible_distribution == "Debian" and ansible_distribution_major_version == "7")
+

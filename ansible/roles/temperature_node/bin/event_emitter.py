@@ -39,7 +39,7 @@ class TemperatureEventEmitter(EventEmitter):
 
     def update_event(self):
         self.event["@timestamp"] = datetime.utcnow()
-        self.event["data"]["temperature"] = round(self.sense.get_temperature_from_pressure()-9.0,1)
+        self.event["data"]["temperature"] = round( (self.sense.get_temperature_from_pressure()+self.sense.get_temperature_from_humidity())/2,1)
         self.event["data"]["pressure"] = round(self.sense.get_pressure(),1)
         self.event["data"]["humidity"] = round(self.sense.get_humidity(),1)
         self.send() 

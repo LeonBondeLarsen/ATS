@@ -1,0 +1,6 @@
+- import_playbook: ats_cleanup.yml
+- import_playbook: ats_node_display.yml
+- import_playbook: ats_node_speaker.yml
+- import_playbook: ats_node_status.yml
+- import_playbook: ats_startup_script.yml
+- import_playbook: ats_reboot.yml

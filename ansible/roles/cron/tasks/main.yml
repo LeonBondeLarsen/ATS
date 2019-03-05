@@ -26,3 +26,10 @@
     special_time: reboot
     job: "/home/{{ ansible_user }}/bin/run_startups.sh"
     user: "{{ ansible_user }}"
+
+- name: "Setup cron to reboot daily at 8"
+  cron:
+    name: "Setup daily reboot"
+    minute: "00"
+    hour: "08"
+    job: "reboot"

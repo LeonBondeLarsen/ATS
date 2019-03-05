@@ -1,0 +1,18 @@
+- hosts: cage1-sensor-box
+  roles:
+  - role: temperature_node
+    vars:  
+      kafka_servers: "manna,hou,bisnap"
+      kafka_topic: "ats_service"
+      identifier: "cage_1"
+      output_period: 60.0
+
+- hosts: cage2-sensor-box
+  roles:
+  - role: temperature_node
+    vars:  
+      kafka_servers: "manna,hou,bisnap"
+      kafka_topic: "ats_service"
+      identifier: "cage_2"
+      output_period: 60.0
+

@@ -1,7 +1,0 @@
-- hosts: all
-  tasks:
-      - name: Shutting down node
-        include_role:
-            name: common
-            tasks_from: poweroff 
-

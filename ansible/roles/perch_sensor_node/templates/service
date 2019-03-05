@@ -1,7 +1,6 @@
 #!/bin/bash
 
 export SENSOR_POLL_PERIOD={{ sensor_poll_period }}
-export MG_IP={{ multicast_group }}
 export CAGE={{ cage }}
 export FRONT_GPIO_PATH={{ front_gpio_path }}
 export BACK_GPIO_PATH={{ back_gpio_path }}

@@ -13,4 +13,10 @@
       services:
       - name: "stream_audio"
         template: templates/service
-        pre_up_script: "set_gains"
+        pre_up_script: "set_gains"  #deprecated
+
+- name: "Create Avahi service"
+  include_role:
+    name: avahi_service
+  vars:
+    description: "{{ node_description }}"

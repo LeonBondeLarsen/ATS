@@ -1,0 +1,21 @@
+- hosts: cage1-camera-box
+  roles:
+  - role: camera_node
+    vars:
+      multicast_group: "ff15::1"
+      id: 1
+      type: "video"
+      height: "720"
+      width: "1280"
+      frame_rate: "60/1"
+
+- hosts: cage2-camera-box
+  roles:
+  - role: camera_node
+    vars:
+      multicast_group: "ff15::2"
+      id: 2
+      type: "video"
+      height: "720"
+      width: "1280"
+      frame_rate: "60/1"

@@ -1,0 +1,24 @@
+- hosts: cage1-output-box
+  roles: 
+  - role: display_node
+    vars:
+      multicast_group: "ff15::2"
+      display: ":0.0"
+      brightness: "0.2"
+      contrast: "1.0"
+      hue: "0.0"
+      saturation: "1.0"
+      flip: "rotate-180"
+
+- hosts: cage2-output-box
+  roles:
+  - role: display_node
+    vars:
+      multicast_group: "ff15::1"
+      display: ":0.0"
+      brightness: "0.2"
+      contrast: "1.0"
+      hue: "0.0"
+      saturation: "1.0"
+      flip: "rotate-180"
+

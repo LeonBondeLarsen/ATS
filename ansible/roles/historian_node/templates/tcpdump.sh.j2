@@ -1,9 +1,15 @@
 #!/bin/bash
 
+# Assumes that recordings are re-started every day
+
 # Get parameters from ansible playbook
 _DIR={{ record_location }}
 _IF={{ record_interface }}
 _SECS={{ rotate_seconds }}
 _USER={{ user }}
+
+_RECORD_PATH=${_DIR}/$(date +%Y)/$(date +%m)/$(date +%d)
+mkdir -p _RECORD_PATH
+
 echo "Starts dumping traffic on interface: $_IF to $_DIR"
-exec tcpdump -i $_IF -Q in -w $_DIR/%H:%M:%S -G $_SECS -Z $_USER
+exec tcpdump -i $_IF -Q in -w $_DIR/%Y/%m/%d/%Y-%m-%dT%R -G $_SECS -Z $_USER

@@ -1,0 +1,7 @@
+- hosts: all 
+  roles:
+  - role: status_node
+    vars:
+      multicast_group: "ff15::20"
+      id: 0
+      type: "events"

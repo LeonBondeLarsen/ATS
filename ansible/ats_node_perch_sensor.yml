@@ -1,0 +1,17 @@
+- hosts: cage1-sensor-box
+  roles:
+  - role: perch_sensor_node
+    vars:  
+      cage: 1
+      sensor_poll_period: "0.2"
+      front_gpio_path: "/sys/class/gpio/gpio27/value"
+      back_gpio_path: "/sys/class/gpio/gpio17/value"
+
+- hosts: cage2-sensor-box
+  roles:
+  - role: perch_sensor_node
+    vars:  
+      cage: 2
+      sensor_poll_period: "0.2"
+      front_gpio_path: "/sys/class/gpio/gpio17/value"
+      back_gpio_path: "/sys/class/gpio/gpio27/value"

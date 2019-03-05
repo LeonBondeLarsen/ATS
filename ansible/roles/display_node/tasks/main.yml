@@ -2,32 +2,14 @@
   include_role:
     name: base_node
   vars:
-      node_name: "display_video_node"
+      node_name: "display_node"
       node_description: "Displays video stream"
       remote_services_path: "/home/pi/Services"
       local_bin_path: bin
       services:
       - name: "display_video"
         template: templates/display_video
-- name: Configure node
-  include_role:
-    name: base_node
-  vars:
-      node_name: "display_still_node"
-      node_description: "Displays video stream"
-      remote_services_path: "/home/pi/Services"
-      local_bin_path: bin
-      services:
       - name: "display_still"
         template: templates/display_still
-- name: Configure node
-  include_role:
-    name: base_node
-  vars:
-      node_name: "display_black_node"
-      node_description: "Displays video stream"
-      remote_services_path: "/home/pi/Services"
-      local_bin_path: bin
-      services:
       - name: "display_black"
         template: templates/display_black

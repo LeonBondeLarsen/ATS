@@ -1,7 +1,7 @@
 #!/bin/zsh
 _AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=48000, channels=1, layout=interleaved'
 
-_IFACE=labvpn
+_IFACE=eth0
 _PORT=5004
 
 # Decode and mix as stereo (box1 in left and box2 in right)

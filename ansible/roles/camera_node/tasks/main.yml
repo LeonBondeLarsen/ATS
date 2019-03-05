@@ -13,3 +13,9 @@
       services:
       - name: "camera"
         template: templates/service
+
+- name: "Create Avahi service"
+  include_role:
+    name: avahi_service
+  vars:
+    description: "{{ node_description }}"

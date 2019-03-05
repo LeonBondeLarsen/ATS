@@ -58,9 +58,3 @@
     - "{{ local_bin_path }}/*"
   loop_control:
     loop_var: file 
-
-- name: "Create Avahi service"
-  include_role:
-    name: avahi_service
-  vars:
-    description: "{{ node_description }}"

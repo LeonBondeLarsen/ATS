@@ -1,6 +1,6 @@
 #!/usr/bin/zsh
 
-XAUTHORITY=$(cat /home/pi/.Xauthority) DISPLAY=:0.0 sudo -u pi eog -f --display=:0 /home/pi/Services/display_still_node/bin/black.jpg
+XAUTHORITY=$(cat /home/pi/.Xauthority) DISPLAY=:0.0 sudo -u pi eog -f --display=:0 /home/pi/Services/display_node/bin/black.jpg
 
 #eog -f /home/pi/Services/display_black_node/bin/black.jpg
 

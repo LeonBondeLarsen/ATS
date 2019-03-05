@@ -100,10 +100,8 @@ Day 2:  Turn on camera and output boxes
         Register bird id's in swarm configs
         Start event emitters
         Check thresholds
-        
-        Star
 
-
+###############################################################################
 Pair 1 
   Bur nr. 5
   Male: orange/purple 14/14
@@ -116,6 +114,7 @@ Pair 1
   2019-01-29 : C
   2019-01-30 : D
 
+###############################################################################
 Pair 2
   Bur nr. 6
 
@@ -129,8 +128,59 @@ Pair 2
   2019-02-07 : C
   2019-02-08 : E
 
+  2019-02-09 : F
+  2019-02-10 : F
+  2019-02-11 : F
+  Video was darker. 
+  Female saw still instead of video.
+  Spend 3 days implementing, improving and calibrating
+
+###############################################################################
+Pair 3
+  Bur nr. 7
+  Male orange42/green42
+  Female orange15
+
+  Day 0: 2019-02-12 Swapped birds, system off
+  Day 1: 2019-02-13 Turned on at 13.00. Removed calibration from temperature.
+  
+  Temperature 2019-02-13:
+  Cage 1 22.9@13.11 25.1@15.28
+  Cage 2 22.0@13.12 24.2@15.31
+  
+  2019-02-20 : A
+  2019-02-21 : E
+  2019-02-22 : F
+  2019-02-28 : C
+  2019-03-01 : D
+  2019-03-02 : B afterwards on
+
+  2019-03-03 : still on
+
+
+###############################################################################
+Pair 4
+  Bur nr. 1
+  Male red36/white36 
+  Female black11/white11
+
+  Day 0: 2019-03-04 Swapped birds, system off
+  Day 1: 2019-03-05 Turned on at 12.15.
+  
+  2019-03-06 : A
+  2019-03-07 : E
+  2019-03-08 : D
+  2019-03-09 : C
+  2019-03-10 : B
+  2019-03-11 : F
+
+
+
 
 Crontabs:
+############################### Female ###############################
+00 09 * * * /home/pi/Services/display_node/bin/start_services F
+00 16 * * * /home/pi/Services/display_node/bin/start_services A
 
 ############################### Pair 1 ###############################
 
@@ -172,4 +222,75 @@ Crontabs:
 
 00 09 08 02 * /home/pi/Services/display_video_node/bin/start_services E
 00 11 08 02 * /home/pi/Services/display_video_node/bin/start_services A
+
+
+############################### Pair 3 ###############################
+
+00 09 14 02 * /home/pi/Services/display_node/bin/start_services A
+00 11 14 02 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 15 02 * /home/pi/Services/display_node/bin/start_services E
+00 11 15 02 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 16 02 * /home/pi/Services/display_node/bin/start_services F
+00 11 16 02 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 17 02 * /home/pi/Services/display_node/bin/start_services C
+00 11 17 02 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 18 02 * /home/pi/Services/display_node/bin/start_services D
+00 11 18 02 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 19 02 * /home/pi/Services/display_node/bin/start_services B
+00 11 19 02 * /home/pi/Services/display_node/bin/start_services A
+
+############################### Pair 3 (second run) ###############################
+
+00 09 20 02 * /home/pi/Services/display_node/bin/start_services A
+00 11 20 02 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 21 02 * /home/pi/Services/display_node/bin/start_services E
+00 11 21 02 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 22 02 * /home/pi/Services/display_node/bin/start_services F
+00 11 22 02 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 23 02 * /home/pi/Services/display_node/bin/start_services C
+00 11 23 02 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 24 02 * /home/pi/Services/display_node/bin/start_services D
+00 11 24 02 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 25 02 * /home/pi/Services/display_node/bin/start_services B
+00 11 25 02 * /home/pi/Services/display_node/bin/start_services A
+
+############################### Pair 3 (second run) ###############################
+
+00 09 28 02 * /home/pi/Services/display_node/bin/start_services C
+00 11 28 02 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 01 03 * /home/pi/Services/display_node/bin/start_services D
+00 11 01 03 * /home/pi/Services/display_node/bin/start_services A
+
+00 09 02 03 * /home/pi/Services/display_node/bin/start_services B
+00 11 02 03 * /home/pi/Services/display_node/bin/start_services F
+
+
+############################### Pair 4 ###############################
+
+00 09 06 03 * /home/pi/Services/display_node/bin/start_services A
+00 11 06 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 07 03 * /home/pi/Services/display_node/bin/start_services E
+00 11 07 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 08 03 * /home/pi/Services/display_node/bin/start_services D
+00 11 08 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 09 03 * /home/pi/Services/display_node/bin/start_services C
+00 11 09 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 10 03 * /home/pi/Services/display_node/bin/start_services B
+00 11 10 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 11 03 * /home/pi/Services/display_node/bin/start_services F
+00 11 11 03 * /home/pi/Services/display_node/bin/start_services F
+
+
+
 

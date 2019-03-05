@@ -1,0 +1,6 @@
+- import_playbook: ats_cleanup.yml
+- import_playbook: ats_node_perch_sensor.yml
+- import_playbook: ats_node_temperature.yml
+- import_playbook: ats_node_status.yml
+- import_playbook: ats_startup_script.yml
+- import_playbook: ats_reboot.yml

@@ -1,0 +1,34 @@
+#!/usr/bin/zsh
+# Arguments: filename, skip, duration (max 60) 
+_filename=$3
+_skip=$1
+_duration=$2
+
+send_ssh()
+# Execute command-line on remote machine via ssh
+{
+    ssh -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t newcastle "$@"
+}
+
+send_tmux()
+# Execute command-line on remote machine in tmux startup-session 
+{
+    send_ssh "tmux send-keys -t playback:0.0 $@" 
+}
+
+print 'Starting playback'
+send_tmux 'playback' 'Space' "$_filename" 'Space' "$_skip" 'Enter' 
+sleep 1
+print 'Starting recording'
+/home/leon/Documents/scripts/ats/master/dumps/dump_audio_video "$_filename" &
+#/home/leon/Documents/scripts/ats/master/dumps/dump_audio "$_filename" &
+#/home/leon/Documents/scripts/ats/master/dumps/dump_audio_one_cage "$_filename" &
+#/home/leon/Documents/scripts/ats/master/dumps/dump_audio_video_one_cage "$_filename" &
+TASK_PID=$!
+sleep $_duration
+kill -15 $TASK_PID
+wait $TASK_PID
+
+send_tmux 'C-c'
+
+print 'done'

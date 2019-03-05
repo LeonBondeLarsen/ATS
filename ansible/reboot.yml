@@ -1,7 +1,0 @@
-- hosts: all
-  tasks:
-      - name: Rebooting node
-        include_role:
-            name: common
-            tasks_from: reboot 
-

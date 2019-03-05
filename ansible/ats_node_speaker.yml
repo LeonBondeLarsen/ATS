@@ -1,0 +1,15 @@
+- hosts: cage1-output-box
+  roles: 
+  - role: speaker_node
+    vars:
+      multicast_group: "ff15::12"
+      volume: "1.0"
+
+
+- hosts: cage2-output-box
+  roles:
+  - role: speaker_node
+    vars:
+      multicast_group: "ff15::11"
+      volume: "1.0"
+

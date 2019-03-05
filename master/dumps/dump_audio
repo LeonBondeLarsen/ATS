@@ -1,0 +1,11 @@
+#!/bin/zsh
+_AUDIO_CAPS='application/x-rtp, media=audio, clock-rate=48000, encoding-name=L16, encoding-params=1, payload=96, format=S16BE, rate=48000, channels=1, layout=interleaved'
+
+_IFACE=eth0
+_PORT=6004
+
+gst-launch-1.0 -e -v interleave name=a_mux ! queue ! audioconvert ! wavenc ! filesink location="$@".wav \
+	    udpsrc multicast-group=ff15::11 multicast-iface=$_IFACE port=$_PORT auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! a_mux. \
+	    udpsrc multicast-group=ff15::12 multicast-iface=$_IFACE port=$_PORT auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! a_mux.
+
+

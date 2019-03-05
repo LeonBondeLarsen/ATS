@@ -32,9 +32,6 @@ all:
           ansible_host: "cage2-sensor-box.local"
 
   hosts: 
-    position-monitor-box: 
-      ansible_host: "position-monitor-box.local"
-
     microphone-array-box: 
       ansible_host: "microphone-array-box.local"
 
@@ -42,6 +39,4 @@ all:
       ansible_user: "llarsen"
       ansible_host: "birdpc01.local"
 
-    leon-office-monitor-box:
-      ansible_host: "leon-office-monitor-box.local"
   
