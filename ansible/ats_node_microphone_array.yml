@@ -7,6 +7,9 @@
       id: 12
       channel1:
         multicast_group: "ff15::11"
+        node_description: "cage1-audio"
       channel2:
         multicast_group: "ff15::12"
+        node_description: "cage2-audio"
+
 

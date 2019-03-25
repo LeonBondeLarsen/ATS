@@ -5,7 +5,7 @@ _IFACE=eth0
 _PORT=5004
 
 # Decode and mix as stereo (box1 in left and box2 in right)
-gst-launch-1.0 -v -m interleave name=mix ! autoaudiosink \
+gst-launch-1.0 -v interleave name=mix ! autoaudiosink \
 	udpsrc multicast-group=ff15::11 multicast-iface=$_IFACE port=$_PORT auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix. \
 	udpsrc multicast-group=ff15::12 multicast-iface=$_IFACE port=$_PORT auto-multicast=true caps=$_AUDIO_CAPS ! rtpL16depay ! audioconvert ! queue ! mix.
 

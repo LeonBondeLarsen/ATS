@@ -15,8 +15,14 @@
         template: templates/service
         pre_up_script: "set_gains"  #deprecated
 
-- name: "Create Avahi service"
+- name: "Create Avahi service channel 1"
   include_role:
     name: avahi_service
   vars:
-    description: "{{ node_description }}"
+    description: "{{ channel1.node_description }}"
+
+- name: "Create Avahi service channel 2"
+  include_role:
+    name: avahi_service
+  vars:
+    description: "{{ channel2.node_description }}"

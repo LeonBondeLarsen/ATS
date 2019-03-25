@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gst-launch-1.0 -e -v v4l2src extra-controls="c,auto_exposure=1" io-mode=2 do-timestamp=true ! "video/x-raw,width=$WIDTH,height=$HEIGHT,framerate=$FRAMERATE" ! omxh264enc ! "video/x-h264, format=I444, width=$WIDTH, height=$HEIGHT, interlace-mode=progressive, pixel-aspect-ratio=1/1" ! rtph264pay config-interval=1 ! udpsink host=$MG_IP auto-multicast=true 
+gst-launch-1.0 -e -v v4l2src extra-controls="c,auto_exposure=1" io-mode=2 do-timestamp=true ! "video/x-raw,width=$WIDTH,height=$HEIGHT,framerate=$FRAMERATE" ! omxh264enc ! "video/x-h264, format=I444, width=$WIDTH, height=$HEIGHT, interlace-mode=progressive, pixel-aspect-ratio=1/1" ! rtph264pay config-interval=1 ! udpsink host=$MG_IP auto-multicast=true ttl-mc=3 
 
 # Old experiments
 #gst-launch-1.0 -e -v v4l2src io-mode=2 do-timestamp=true ! "video/x-raw,width=1920,height=1080,framerate=25/1,format=I420" ! omxh264enc ! "video/x-h264, format=I420, width=1280, height=720, interlace-mode=progressive, pixel-aspect-ratio=1/1" ! rtph264pay config-interval=1 ! udpsink host=$MG_IP auto-multicast=true

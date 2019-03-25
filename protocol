@@ -101,6 +101,15 @@ Day 2:  Turn on camera and output boxes
         Start event emitters
         Check thresholds
 
+
+Summary notes:
+1: Restarted due to failure. Data shows clear preference for front perch in all states.
+2: Video was darker. Good data.
+3: Followed protocol. Crappy data
+4: Followed protocol. Good data.
+5: Followed protocol. Useless data
+6: Had to rerun two days. Data looks good
+
 ###############################################################################
 Pair 1 
   Bur nr. 5
@@ -133,7 +142,7 @@ Pair 2
   2019-02-11 : F
   Video was darker. 
   Female saw still instead of video.
-  Spend 3 days implementing, improving and calibrating
+  Spent 3 days implementing, improving and calibrating
 
 ###############################################################################
 Pair 3
@@ -174,7 +183,39 @@ Pair 4
   2019-03-10 : B
   2019-03-11 : F
 
+###############################################################################
+Pair 5
+  Bur nr. 3
+  Male brown1
+  Female brown17/white17
 
+  Day 0: 2019-03-11 Swapped birds, system off
+  Day 1: 2019-03-12 Turned on at 08.15
+  
+  2019-03-12 : A
+  2019-03-13 : C
+  2019-03-14 : F
+  2019-03-15 : E
+  2019-03-16 : D
+  2019-03-17 : B
+
+###############################################################################
+Pair 6
+  Bur nr. 2
+  Male red20/black20
+  Female black5/white5
+
+  Day 0: 2019-03-18 Swapped birds, system off
+  Day 1: 2019-03-19 Turned on at 08.15
+  
+  2019-03-20 : A
+  2019-03-21 : C Sound failed. No harm to experiment but no bout data
+  2019-03-22 : E Poor image quality due to wrong exposure. Disabled reboots on cam and mic. Problems with timestamps on perch sensor from 14.06 to ??? dated as 2016-02-11T23:12:50
+  2019-03-23 : B
+  2019-03-24 : D
+  2019-03-25 : F
+  2019-03-26 : C
+  2019-03-27 : E
 
 
 Crontabs:
@@ -291,6 +332,37 @@ Crontabs:
 00 09 11 03 * /home/pi/Services/display_node/bin/start_services F
 00 11 11 03 * /home/pi/Services/display_node/bin/start_services F
 
+############################### Pair 5 ###############################
 
+00 09 12 03 * /home/pi/Services/display_node/bin/start_services A
+00 11 12 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 13 03 * /home/pi/Services/display_node/bin/start_services C
+00 11 13 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 14 03 * /home/pi/Services/display_node/bin/start_services F
+00 11 14 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 15 03 * /home/pi/Services/display_node/bin/start_services E
+00 11 15 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 16 03 * /home/pi/Services/display_node/bin/start_services D
+00 11 16 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 17 03 * /home/pi/Services/display_node/bin/start_services B
+00 11 17 03 * /home/pi/Services/display_node/bin/start_services F
 
+############################### Pair 6 ###############################
+
+00 09 20 03 * /home/pi/Services/display_node/bin/start_services A
+00 11 20 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 21 03 * /home/pi/Services/display_node/bin/start_services C
+00 11 21 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 22 03 * /home/pi/Services/display_node/bin/start_services E
+00 11 22 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 23 03 * /home/pi/Services/display_node/bin/start_services B
+00 11 23 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 24 03 * /home/pi/Services/display_node/bin/start_services D
+00 11 24 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 25 03 * /home/pi/Services/display_node/bin/start_services F
+00 11 25 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 26 03 * /home/pi/Services/display_node/bin/start_services C
+00 11 26 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 27 03 * /home/pi/Services/display_node/bin/start_services E
+00 11 27 03 * /home/pi/Services/display_node/bin/start_services A
 

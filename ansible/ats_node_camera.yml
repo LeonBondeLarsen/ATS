@@ -2,6 +2,7 @@
   roles:
   - role: camera_node
     vars:
+      node_description: "cage1-camera"
       multicast_group: "ff15::1"
       id: 1
       type: "video"
@@ -13,6 +14,7 @@
   roles:
   - role: camera_node
     vars:
+      node_description: "cage2-camera"
       multicast_group: "ff15::2"
       id: 2
       type: "video"

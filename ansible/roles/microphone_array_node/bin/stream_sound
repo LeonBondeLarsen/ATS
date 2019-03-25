@@ -5,5 +5,5 @@ echo "Starting audio streams on $_MG_CH1 and $_MG_CH2 at sample rate $_SR"
 sudo /home/pi/array-tools-1.0/adc/grab -f 2500000 -B $_BUFFER -vv | \
     sox -c8 -r312500 -t s16 - -t s16 - remix 1 2 rate $_SR |  \
     stdbuf -i0 -o0 gst-launch-1.0 -e -v fdsrc ! "audio/x-raw, format=S16LE,rate=$_SR, clock-rate=$_SR, channels=2, layout=interleaved" ! deinterleave name=d \
-        d.src_0 ! queue ! audioconvert ! rtpL16pay ! udpsink host=$_MG_CH1 auto-multicast=true \
-        d.src_1 ! queue ! audioconvert ! rtpL16pay ! udpsink host=$_MG_CH2 auto-multicast=true 
+        d.src_0 ! queue ! audioconvert ! rtpL16pay ! udpsink host=$_MG_CH1 auto-multicast=true ttl-mc=3 \
+        d.src_1 ! queue ! audioconvert ! rtpL16pay ! udpsink host=$_MG_CH2 auto-multicast=true ttl-mc=3
