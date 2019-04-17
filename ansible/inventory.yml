@@ -11,32 +11,32 @@ all:
     camera_boxes:
       hosts:
         cage1-camera-box:  
-          ansible_host: "cage1-camera-box.local"
+          ansible_host: "cage1-camera-box"
 
         cage2-camera-box:  
-          ansible_host: "cage2-camera-box.local"
+          ansible_host: "cage2-camera-box"
 
     output_boxes: 
       hosts:
         cage1-output-box:  
-          ansible_host: "cage1-output-box.local" 
+          ansible_host: "cage1-output-box" 
 
         cage2-output-box:  
-          ansible_host: "cage2-output-box.local"
+          ansible_host: "cage2-output-box"
         
     sensor_boxes:
       hosts:
         cage1-sensor-box:  
-          ansible_host: "cage1-sensor-box.local"
+          ansible_host: "cage1-sensor-box"
         cage2-sensor-box:  
-          ansible_host: "cage2-sensor-box.local"
+          ansible_host: "cage2-sensor-box"
 
   hosts: 
     microphone-array-box: 
-      ansible_host: "microphone-array-box.local"
+      ansible_host: "microphone-array-box"
 
     birdpc01:
       ansible_user: "llarsen"
-      ansible_host: "birdpc01.local"
+      ansible_host: "birdpc01"
 
   

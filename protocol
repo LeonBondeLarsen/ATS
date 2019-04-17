@@ -215,7 +215,49 @@ Pair 6
   2019-03-24 : D
   2019-03-25 : F
   2019-03-26 : C
-  2019-03-27 : E
+  2019-03-27 : E Lost sound
+  2019-03-28 : E
+
+###############################################################################
+Pair 7
+  Bur nr. 9
+  Male orange43/green43
+  Female grey42/red42
+
+  Day 0: 2019-03-28 Swapped birds, system off
+  Day 1: 2019-03-29 Turned on at 08.30
+
+  2019-04-01 : A
+  2019-04-02 : B
+  2019-04-03 : E
+  2019-04-04 : C
+  2019-04-05 : F
+  2019-04-06 : D
+
+###############################################################################
+Pair 8
+  Bur nr. 9
+  Male red24/black24
+  Female orange19/purple19
+
+  2019-04-08 Swapped birds, system off at 15.30
+  Day 0: 2019-04-09 
+  Day 1: 2019-04-10 Turned on at 08.45
+
+  2019-04-10 : A
+  2019-04-11 : C
+  2019-04-12 : F
+  2019-04-13 : B
+  2019-04-14 : E
+  2019-04-15 : D
+
+###############################################################################
+Pair 9 (rerun of pair 3)
+  Bur nr. 7
+  Male orange42/green42
+  Female orange15
+
+  2019-04-17 Swapped birds, system off at 15.30
 
 
 Crontabs:
@@ -364,5 +406,37 @@ Crontabs:
 00 09 26 03 * /home/pi/Services/display_node/bin/start_services C
 00 11 26 03 * /home/pi/Services/display_node/bin/start_services A
 00 09 27 03 * /home/pi/Services/display_node/bin/start_services E
+00 11 28 03 * /home/pi/Services/display_node/bin/start_services A
+00 09 28 03 * /home/pi/Services/display_node/bin/start_services E
 00 11 27 03 * /home/pi/Services/display_node/bin/start_services A
+
+############################### Pair 7 ###############################
+
+00 10 01 04 * /home/pi/Services/display_node/bin/start_services A
+00 12 01 04 * /home/pi/Services/display_node/bin/start_services A
+00 10 02 04 * /home/pi/Services/display_node/bin/start_services B
+00 12 02 04 * /home/pi/Services/display_node/bin/start_services A
+00 10 03 04 * /home/pi/Services/display_node/bin/start_services E
+00 12 03 04 * /home/pi/Services/display_node/bin/start_services A
+00 10 04 04 * /home/pi/Services/display_node/bin/start_services C
+00 12 04 04 * /home/pi/Services/display_node/bin/start_services A
+00 10 05 04 * /home/pi/Services/display_node/bin/start_services F
+00 12 05 04 * /home/pi/Services/display_node/bin/start_services A
+00 10 06 04 * /home/pi/Services/display_node/bin/start_services D
+00 12 06 04 * /home/pi/Services/display_node/bin/start_services F
+
+############################### Pair 8 ###############################
+
+00 10 10 04 * /home/pi/Services/display_node/bin/start_services A
+00 12 10 04 * /home/pi/Services/display_node/bin/start_services A
+00 10 11 04 * /home/pi/Services/display_node/bin/start_services C
+00 12 11 04 * /home/pi/Services/display_node/bin/start_services A
+00 10 12 04 * /home/pi/Services/display_node/bin/start_services F
+00 12 12 04 * /home/pi/Services/display_node/bin/start_services A
+00 10 13 04 * /home/pi/Services/display_node/bin/start_services B
+00 12 13 04 * /home/pi/Services/display_node/bin/start_services A
+00 10 14 04 * /home/pi/Services/display_node/bin/start_services E
+00 12 14 04 * /home/pi/Services/display_node/bin/start_services A
+00 10 15 04 * /home/pi/Services/display_node/bin/start_services D
+00 12 15 04 * /home/pi/Services/display_node/bin/start_services F
 

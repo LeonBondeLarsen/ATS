@@ -20,8 +20,8 @@ print 'Starting playback'
 send_tmux 'playback' 'Space' "$_filename" 'Space' "$_skip" 'Enter' 
 sleep 1
 print 'Starting recording'
-/home/leon/Documents/scripts/ats/master/dumps/dump_audio_video "$_filename" &
-#/home/leon/Documents/scripts/ats/master/dumps/dump_audio "$_filename" &
+/home/leon/ws/software/scripts/ats/master/dumps/dump_audio_video "$_filename" &
+#/home/leon/ws/software/scripts/ats/master/dumps/dump_audio "$_filename" &
 #/home/leon/Documents/scripts/ats/master/dumps/dump_audio_one_cage "$_filename" &
 #/home/leon/Documents/scripts/ats/master/dumps/dump_audio_video_one_cage "$_filename" &
 TASK_PID=$!
